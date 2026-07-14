@@ -325,13 +325,13 @@ elif page == "聯絡我們":
     st.title("📬 聯絡社團幹部")
     st.write("有任何加入社團、合作 or 課程問題，請填寫表單（送出後幹部將會在 `zlcsc24@gmail.com` 信箱收到您的訊息）：")
     
-    # 這裡已經為 zlcsc24@gmail.com 產生好專用的 Access Key
-    WEB3FORMS_KEY = "5e3aee67-deca-4ed9-b708-d8f90567b5db"
+    # 這裡直接填寫你們的社團信箱
+    CLUB_EMAIL = "zlcsc24@gmail.com"
     
     with st.form("my_form"):
         name = st.text_input("你的稱呼：")
         class_num = st.text_input("班級 / 學號（選填）：")
-        email = st.text_input("聯絡 Email（以便學長姐回信給您）：")  # 新增 Email 欄位
+        email = st.text_input("聯絡 Email（以便學長姐回信給您）：")
         msg = st.text_area("你想問的問題或回饋：")
         
         submit_button = st.form_submit_button(label="送出表單")
@@ -347,29 +347,29 @@ elif page == "聯絡我們":
             else:
                 # 顯示載入動畫
                 with st.spinner("正在為您傳送訊息給學長姐..."):
-                    # 這裡的 key 必須對應 Web3Forms 的規則，"email" 欄位會被自動設為 Reply-To
+                    # 準備發送給 Formspree 的資料
                     payload = {
-                        "access_key": WEB3FORMS_KEY,
-                        "subject": f"【中崙資研官網提問】來自 {name} 的訊息",
-                        "from_name": "中崙資研官網表單",
-                        "name": name,          # 送件人姓名
-                        "email": email,        # 送件人 Email（Web3Forms 會自動偵測此欄位並設定 Reply-To）
+                        "稱呼": name,
+                        "_replyto": email,    # Formspree 會自動將此設為回信地址
                         "班級/學號": class_num,
                         "提問內容": msg
                     }
                     
                     try:
-                        # 背景發送請求給 Web3Forms
+                        # 將請求發送給 Formspree 對應你們信箱的專屬端點
                         response = requests.post(
-                            "https://api.web3forms.com/submit", 
+                            f"https://formspree.io/f/{CLUB_EMAIL}", 
                             json=payload,
+                            headers={"Accept": "application/json"},
                             timeout=10
                         )
-                        result = response.json()
                         
-                        if response.status_code == 200 and result.get("success"):
-                            st.success(f"🎉 傳送成功！謝謝 {name} 的留言，教學或網管學長會盡快回覆到您的信箱：{email}！")
+                        # Formspree 第一次使用時會回傳需要驗證
+                        if response.status_code == 200 or response.status_code == 302:
+                            st.success(f"🎉 表單已送出！請幹部立刻檢查 `zlcsc24@gmail.com` 信箱進行「第一次啟用確認」喔！")
                         else:
-                            st.error("😭 傳送失敗，API 暫時無回應，請稍後再試，或直接聯絡幹部！")
+                            st.error("😭 傳送失敗，請稍後再試，或直接聯絡幹部！")
+                    except Exception as e:
+                        st.error("⚠️ 連線超時或網路異常，請檢查您的網路狀態！")
                     except Exception as e:
                         st.error("⚠️ 連線超時或網路異常，請檢查您的網路狀態！")
