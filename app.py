@@ -168,81 +168,81 @@ members = [
         "role": "社長 兼 教學", 
         "name": "陳平安", 
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", 
-        "email": "chenpingan@email.com", 
-        "specialty": "程式架構、系統設計、網路爬蟲、資料處理", 
-        "intro": "熱愛開源專案，擅長 Python 和 Web 開發，帶領大家進入數據的世界。"
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************"
     },
     {
         "id": "1", 
         "role": "副社 兼 教學", 
         "name": "李尚瑾", 
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin", 
-        "email": "leeshangjin@email.com", 
-        "specialty": "AI 應用、數據分析、專案實戰", 
-        "intro": "對機器學習充滿熱情，喜歡用程式解決實際問題，用實際案例展示 AI 的力量。"
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************"
     },
     {
         "id": "2", 
         "role": "公關", 
         "name": "魏敘百", 
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=weisubai", 
-        "email": "weisubai@email.com", 
-        "specialty": "溝通協調、活動策劃", 
-        "intro": "負責社團對外關係，是社團最溫暖的橋樑。"
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************"
     },
     {
         "id": "3", 
         "role": "活動", 
         "name": "張承緒", 
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zhangchengxu", 
-        "email": "zhangchengxu@email.com", 
-        "specialty": "活動企劃、時間管理", 
-        "intro": "確保每場活動順暢進行，細心負責是我的代名詞。"
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************"
     },
     {
         "id": "4", 
         "role": "活動 兼 總務", 
         "name": "曾開元", 
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zengkaiyuan", 
-        "email": "zengkaiyuan@email.com", 
-        "specialty": "活動執行、現場管理、財務管理、資源規劃", 
-        "intro": "活動現場的靈魂人物，並確保社團資源能得到最合理、最完美的分配。"
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************"
     },
     {
         "id": "5", 
         "role": "美宣", 
         "name": "倪宇廷", 
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=niyuting", 
-        "email": "niyuting@email.com", 
-        "specialty": "平面設計、視覺創意", 
-        "intro": "用創意與美感設計，傳遞中崙資研最鮮明的 brand 形象。"
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************"
     },
     {
         "id": "6", 
         "role": "設備", 
         "name": "陳庭弘", 
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chentinghong", 
-        "email": "chentinghong@email.com", 
-        "specialty": "硬體維護、技術支援", 
-        "intro": "默默守護大後方的設備狂熱者，負責社團所有的硬體與技術基礎建設。"
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************"
     },
     {
         "id": "7", 
         "role": "文書", 
         "name": "黃于恩", 
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=huangyuen", 
-        "email": "huangyuen@email.com", 
-        "specialty": "文檔整理、紀錄管理", 
-        "intro": "細心記錄社團的發展歷程，保管所有珍貴的活動回憶與重要文檔。"
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************"
     },
     {
         "id": "8", 
         "role": "教學", 
         "name": "蘇奕全", 
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=suyichuan", 
-        "email": "suyichuan@email.com", 
-        "specialty": "Python 基礎、演算法", 
-        "intro": "教學風格幽默風趣，擅長用最簡單好懂的概念講解複雜的演算法。"
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************"
     }
 ]
 
@@ -255,9 +255,9 @@ if page == "首頁介紹":
     
     st.markdown("""
     ### 🌟 關於我們
-    我們是熱愛技術、喜歡動手實作的科技社團。無論你是程式小白還是大神的轉世，這裡都有你的舞台！
-    * **學習內容**：Python 基礎、網路爬蟲、AI 應用、基礎演算法。
-    * **社團活動**：技術交流會、專題黑客松、學長姐經驗傳承。
+    我們是看似業餘，實則超級專業的資研社，這裡歡迎不論是資訊新手或者超級厲害的你
+    * **學習內容**：Python基礎、C++語法、AI應用、升學管道、學長姐經驗談。
+    * **社團活動**：交流茶會、聯合迎新、聖誕交換禮物、社內程式競賽與成發。
     """)
 
 elif page == "成員介紹":
@@ -293,7 +293,7 @@ elif page == "成員介紹":
             
     # 2. 顯示「左右滾動卡片列表」
     else:
-        st.write("💡 點擊卡片內**任何地方**（包含照片、名字、背景）即可查看個人詳細資訊！")
+        st.write("💡 點擊幹部介紹下方按鈕即可查看個人詳細資訊！")
         
         # 建立與成員數量相同的 columns
         cols = st.columns(len(members))
@@ -323,7 +323,7 @@ elif page == "聯絡我們":
     import requests  # 引入發送請求的套件
 
     st.title("📬 聯絡社團幹部")
-    st.write("有任何加入社團、合作 or 課程問題，請填寫表單（送出後幹部將會在 `zlcsc24@gmail.com` 信箱收到您的訊息）：")
+    st.write("有任何加入社團、合作 or 課程問題，請填寫表單：")
     
     # 這裡已經為 zlcsc24@gmail.com 產生好專用的 Access Key
     WEB3FORMS_KEY = "fae75878-ba6b-47e2-8231-9a7442eb9bc3"
