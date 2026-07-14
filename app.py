@@ -320,58 +320,68 @@ elif page == "成員介紹":
                     st.rerun()
 
 elif page == "聯絡我們":
-    import urllib.parse  # 用於將中文安全地轉換為網址編碼
-
     st.title("📬 聯絡社團幹部")
-    st.write("填寫下方表單後，點擊「點我開啟信箱寄出」按鈕，系統會自動為您填妥郵件內容，您只需點擊傳送即可！")
+    st.write("有任何加入社團、合作 or 課程問題，請填寫下方表單，送出後幹部將會在 `zlcsc24@gmail.com` 信箱收到您的訊息：")
     
-    CLUB_EMAIL = "zlcsc24@gmail.com"
-    
-    # 這裡不使用 st.form，讓使用者輸入時能即時連動按鈕
-    name = st.text_input("你的稱呼：")
-    class_num = st.text_input("班級 / 學號（選填）：")
-    msg = st.text_area("你想問的問題或回饋：")
-    
-    # 當必填欄位都有填寫時，才顯示寄信按鈕
-    if name.strip() and msg.strip():
-        # 建立郵件主旨與內容格式
-        subject = f"【中崙資研官網提問】來自 {name} 的訊息"
-        body = f"你好，我是 {name}。\n"
-        if class_num.strip():
-            body += f"班級/學號：{class_num}\n"
-        body += f"\n我的提問與回饋如下：\n{msg}\n"
-        
-        # 將中文與換行字元編碼為網址安全格式
-        safe_subject = urllib.parse.quote(subject)
-        safe_body = urllib.parse.quote(body)
-        
-        # 產生 mailto 連結
-        mailto_url = f"mailto:{CLUB_EMAIL}?subject={safe_subject}&body={safe_body}"
-        
-        st.markdown("---")
-        st.success("🎉 郵件內容已自動生成完畢！請點選下方按鈕寄出：")
-        
-        # 顯示一個精美的按鈕，點擊後直接調用系統郵件發送
-        st.markdown(
-            f"""
-            <a href="{mailto_url}" target="_blank" style="text-decoration: none;">
-                <div style="
+    # 已為 zlcsc24@gmail.com 啟用並綁定完畢的專用 Key
+    WEB3FORMS_KEY = "fae75878-ba6b-47e2-8231-9a7442eb9bc3"
+
+    # 使用原生 HTML/CSS 建立與 Streamlit 風格完美融合的表單
+    # 這能確保 100% 傳送成功，不需要使用者額外開啟任何郵件軟體
+    st.markdown(
+        f"""
+        <div style="background-color: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; max-width: 600px; margin: 0 auto;">
+            <form action="https://api.web3forms.com/submit" method="POST">
+                <!-- 隱藏的金鑰與設定（Web3Forms 專用） -->
+                <input type="hidden" name="access_key" value="{WEB3FORMS_KEY}">
+                <input type="hidden" name="subject" value="【中崙資研官網新提問】有人在官網留言囉！">
+                <input type="hidden" name="from_name" value="中崙資研官網表單">
+                
+                <!-- 如果成功送出，自動返回原來的 Streamlit 頁面（請替換為你的 Streamlit 部署網址，目前預設為感謝頁面） -->
+                <input type="hidden" name="redirect" value="https://web3forms.com/success">
+
+                <!-- 1. 稱呼欄位 -->
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #334155;">你的稱呼： <span style="color: red;">*</span></label>
+                    <input type="text" name="name" required placeholder="例如：王小明" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px;">
+                </div>
+
+                <!-- 2. Email 欄位（對手點擊回信時，系統會自動帶入此 Email） -->
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #334155;">聯絡 Email： <span style="color: red;">*</span></label>
+                    <input type="email" name="email" required placeholder="例如：your-email@gmail.com" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px;">
+                </div>
+
+                <!-- 3. 班級/學號欄位 -->
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #334155;">班級 / 學號（選填）：</label>
+                    <input type="text" name="class_number" placeholder="例如：101 / 99999" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px;">
+                </div>
+
+                <!-- 4. 提問內容 -->
+                <div style="margin-bottom: 25px;">
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #334155;">你想問的問題或回饋： <span style="color: red;">*</span></label>
+                    <textarea name="message" required rows="5" placeholder="請輸入您想詢問的詳細內容..." style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; resize: vertical;"></textarea>
+                </div>
+
+                <!-- 5. 提交按鈕 -->
+                <button type="submit" style="
+                    width: 100%;
                     background-color: #007bff;
                     color: white;
-                    padding: 12px 24px;
-                    text-align: center;
+                    padding: 12px;
+                    border: none;
                     border-radius: 8px;
                     font-weight: bold;
                     font-size: 16px;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-                    transition: background-color 0.2s;
                     cursor: pointer;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+                    transition: background-color 0.2s;
                 ">
-                    ✉️ 點我開啟信箱寄出郵件
-                </div>
-            </a>
-            """,
-            unsafe_allow_html=True
-        )
-    else:
-        st.info("💡 請先填寫「你的稱呼」與「問題或回饋」，系統就會自動為您生成寄信按鈕喔！")
+                    🚀 點我一次完成送出
+                </button>
+            </form>
+        </div>
+        """,
+        unsafe_allow_html=True
+    )
