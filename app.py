@@ -1,5 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
+import json
 
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
@@ -87,7 +88,11 @@ elif page == "成員介紹":
         {"role": "總務", "name": "曾開元", "img": "https://i.pravatar.cc/220?u=zengkaiyuan2", "email": "zengkaiyuan2@email.com", "specialty": "財務管理、資源規劃", "intro": "確保社團資源合理分配和運用。"},
     ]
 
-    # 建立可點擊的成員卡片 HTML
+    # 初始化 Session State
+    if "selected_member" not in st.session_state:
+        st.session_state.selected_member = None
+
+    # 建立可點擊的成員卡片 HTML - 使用 expander key 來觸發
     cards_html = """
     <style>
     html, body { margin: 0; padding: 0; }
@@ -113,6 +118,7 @@ elif page == "成員介紹":
         margin-right: 8px;
         cursor: pointer;
         transition: all 0.3s ease;
+        user-select: none;
     }
     .member-card:hover {
         box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
@@ -150,7 +156,7 @@ elif page == "成員介紹":
     
     for idx, member in enumerate(members):
         cards_html += f"""
-        <div class='member-card' data-member-index='{idx}'>
+        <div class='member-card' onclick="window.streamlitState = window.streamlitState || {{}}; window.streamlitState.selectedMember = '{member['name']}'; window.location.hash = 'member_{idx}'; window.dispatchEvent(new Event('hashchange'));">
             <img src='{member['img']}' alt='{member['name']}'>
             <h4>{member['name']}</h4>
             <p><strong>{member['role']}</strong></p>
@@ -164,34 +170,31 @@ elif page == "成員介紹":
     st.write("---")
     st.write("💡 點擊幹部頭像查看更多資訊")
     
-    # 使用 Streamlit 的 columns 和 button 來製作可點擊的卡片
-    cols = st.columns(4)
+    # 使用 URL 查詢參數或簡單的點擊追蹤
+    # 建立隱藏的按鈕來接收來自 HTML 的點擊
+    clicked_member = None
     for idx, member in enumerate(members):
-        with cols[idx % 4]:
-            if st.button(f"👤 {member['name']}\n{member['role']}", key=f"member-btn-{idx}", use_container_width=True):
-                st.session_state.selected_member_idx = idx
+        if st.button("", key=f"hidden-member-{idx}", label_visibility="collapsed"):
+            clicked_member = member['name']
     
-    # 顯示選中幹部的詳細資訊
-    if "selected_member_idx" in st.session_state:
-        member = members[st.session_state.selected_member_idx]
-        
-        st.markdown("---")
-        st.markdown(f"## 📋 {member['name']} 的詳細資訊")
-        
-        col1, col2 = st.columns([1, 2])
-        with col1:
-            st.image(member['img'], width=150)
-        
-        with col2:
-            st.markdown(f"**職位：** {member['role']}")
-            st.markdown(f"**📧 Email：** {member['email']}")
-            st.markdown(f"**🎯 專長：** {member['specialty']}")
-            st.markdown(f"**📝 簡介：** {member['intro']}")
-        
-        if st.button("❌ 關閉詳細資訊", key="close-detail"):
-            if "selected_member_idx" in st.session_state:
-                del st.session_state.selected_member_idx
-            st.rerun()
+    # 檢查 query 參數或使用其他方式檢測選擇
+    # 簡化方式：展示所有成員的可點擊卡片，每個卡片是一個 expander
+    st.subheader("📋 成員詳細資訊")
+    for idx, member in enumerate(members):
+        with st.expander(f"👤 {member['name']} ({member['role']})", expanded=(st.session_state.selected_member == member['name'])):
+            col1, col2 = st.columns([1, 2])
+            with col1:
+                st.image(member['img'], width=150)
+            
+            with col2:
+                st.markdown(f"**職位：** {member['role']}")
+                st.markdown(f"**📧 Email：** {member['email']}")
+                st.markdown(f"**🎯 專長：** {member['specialty']}")
+                st.markdown(f"**📝 簡介：** {member['intro']}")
+            
+            if st.button("選擇此成員", key=f"select-{idx}"):
+                st.session_state.selected_member = member['name']
+                st.rerun()
 
 elif page == "社課講義":
     st.title("📚 歷屆社課資源庫")
