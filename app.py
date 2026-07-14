@@ -88,8 +88,8 @@ elif page == "成員介紹":
     ]
 
     # 初始化 Session State 用於模態視窗
-    if "selected_member" not in st.session_state:
-        st.session_state.selected_member = None
+    if "selected_member_idx" not in st.session_state:
+        st.session_state.selected_member_idx = None
 
     # 建立可點擊的成員卡片 HTML
     cards_html = """
@@ -154,41 +154,37 @@ elif page == "成員介紹":
     
     for idx, member in enumerate(members):
         cards_html += f"""
-        <div class='member-card' onclick="document.getElementById('member-{idx}').click()">
+        <div class='member-card' onclick="document.getElementById('member-trigger-{idx}').click()">
             <img src='{member['img']}' alt='{member['name']}'>
             <h4>{member['name']}</h4>
             <p><strong>{member['role']}</strong></p>
         </div>
-        <input type='hidden' id='member-{idx}'>
         """
     
     cards_html += "</div></div>"
+    
+    # 建立隱藏的按鈕用於觸發模態視窗
+    for idx in range(len(members)):
+        if st.button("", key=f"member-trigger-{idx}", label_visibility="collapsed"):
+            st.session_state.selected_member_idx = idx
+    
     components.html(cards_html, height=360, scrolling=True)
 
-    # 建立詳細資訊檢視
     st.write("---")
-    st.write("💡 點擊頭像查看更多幹部資訊")
-    
-    # 建立欄位選擇器
-    st.subheader("🔍 選擇幹部查看詳情")
-    cols = st.columns(3)
-    
-    for idx, member in enumerate(members):
-        col = cols[idx % 3]
-        with col:
-            if st.button(f"👤 {member['name']} ({member['role']})", key=f"btn-{idx}"):
-                st.session_state.selected_member = idx
-    
-    # 顯示選中幹部的詳細資訊
-    if st.session_state.selected_member is not None:
-        member = members[st.session_state.selected_member]
+    st.write("💡 點擊幹部頭像查看更多資訊")
+
+    # 顯示模態視窗風格的詳細資訊
+    if st.session_state.selected_member_idx is not None:
+        member = members[st.session_state.selected_member_idx]
         
-        with st.container():
-            st.markdown(f"### {member['name']} - {member['role']}")
+        # 使用容器創建模態視窗效果
+        modal = st.container()
+        with modal:
+            st.markdown(f"## {member['name']} - {member['role']}")
             
             col1, col2 = st.columns([1, 2])
             with col1:
-                st.image(member['img'], width=150, use_column_width=False)
+                st.image(member['img'], width=150)
             
             with col2:
                 st.markdown(f"**📧 Email:** {member['email']}")
@@ -196,7 +192,7 @@ elif page == "成員介紹":
                 st.markdown(f"**📝 簡介:** {member['intro']}")
             
             if st.button("❌ 關閉", key="close-modal"):
-                st.session_state.selected_member = None
+                st.session_state.selected_member_idx = None
                 st.rerun()
 
 elif page == "社課講義":
