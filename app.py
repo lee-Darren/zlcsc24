@@ -25,7 +25,7 @@ div[data-testid="stHorizontalBlock"] > div {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 20px 15px 25px 15px !important;
+    padding: 20px 15px 45px 15px !important; /* 增加底部 padding (45px)，為「個人頁面」文字留出空間 */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex !important;
@@ -113,17 +113,30 @@ div[data-testid="stHorizontalBlock"] div.stButton > button {
     height: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
-    background-color: transparent !important; /* 完全透明，保留點擊 */
+    background-color: transparent !important; /* 平時背景完全透明 */
     border: none !important;
-    color: transparent !important; /* 隱藏原本按鈕的文字與框線 */
     box-shadow: none !important;
     cursor: pointer !important;
     border-radius: 16px !important; /* 圓角貼合卡片外框 */
+    
+    /* 核心排版：利用 Flexbox 將按鈕文字推至卡片最底部 */
+    display: flex !important;
+    align-items: flex-end !important;
+    justify-content: center !important;
+    padding-bottom: 15px !important; /* 控制「個人頁面」字樣與底部的距離 */
+    
+    /* 文字樣式設定 */
+    color: #007bff !important; 
+    font-size: 14px !important;
+    font-weight: bold !important;
+    transition: background-color 0.2s, color 0.2s !important;
 }
 
-/* 當滑鼠移入卡片時，整張卡片微幅變暗或有些微點擊回饋感 */
+/* 當滑鼠移入卡片時，整張卡片微幅變暗，且文字顏色加深 */
 div[data-testid="stHorizontalBlock"] > div:hover button {
-    background-color: rgba(0, 123, 255, 0.01) !important; 
+    background-color: rgba(0, 123, 255, 0.03) !important; 
+    color: #0056b3 !important;
+    text-decoration: underline !important; /* 滑鼠懸停時加上底線，增加提示感 */
 }
 
 /* 9. 滾動條美化 */
@@ -157,7 +170,7 @@ members = [
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", 
         "email": "chenpingan@email.com", 
         "specialty": "程式架構、系統設計、網路爬蟲、資料處理", 
-        "intro": "熱愛開源專案，擅長 Python 和 Web 開發，帶領大家進入數據的世界。"
+        "intro": "熱愛開源專案，擅長 Python 和 Web 開發，帶領大家進入數據的世界."
     },
     {
         "id": "1", 
@@ -301,8 +314,8 @@ elif page == "成員介紹":
                     unsafe_allow_html=True
                 )
                 
-                # B. 透明按鈕（透過 CSS :has 篩選器，將按鈕元件與其外層容器完美定位為 absolute 並鋪滿卡片）
-                if st.button("", key=f"btn_{member['id']}", use_container_width=True):
+                # B. 透明按鈕（在按鈕上加入標註 "個人頁面 →"，並利用 CSS 將其完美的定位與延伸）
+                if st.button("個人頁面 →", key=f"btn_{member['id']}", use_container_width=True):
                     st.session_state.selected_member = member
                     st.rerun()
 
