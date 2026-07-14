@@ -1,7 +1,57 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
+
+st.markdown("""
+<style>
+.block-container {
+    padding: 1rem 3rem;
+    text-align: center;
+}
+.member-scroll {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    overflow-x: auto;
+    padding: 16px 0;
+}
+.member-card {
+    min-width: 240px;
+    max-width: 240px;
+    background: #ffffff;
+    border: 1px solid #e6e6e6;
+    border-radius: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    padding: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+.member-card img {
+    width: 120px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 12px;
+}
+.member-card h4 {
+    margin: 8px 0 4px;
+    font-size: 18px;
+}
+.member-card p {
+    margin: 4px 0;
+    color: #333333;
+}
+.member-scroll::-webkit-scrollbar {
+    height: 10px;
+}
+.member-scroll::-webkit-scrollbar-thumb {
+    background: rgba(0,0,0,0.2);
+    border-radius: 999px;
+}
+</style>
+""", unsafe_allow_html=True)
 
 # 2. 建立側邊欄導覽選單
 st.sidebar.title("🧭 網站導覽")
@@ -41,13 +91,14 @@ elif page == "成員介紹":
         {"role": "總務", "name": "曾開元", "img": "https://i.pravatar.cc/220?u=zengkaiyuan2"},
     ]
 
-    card_style = """
+    cards_html = """
     <style>
     .member-scroll {
         display: flex;
+        justify-content: center;
+        gap: 16px;
         overflow-x: auto;
         padding: 16px 0;
-        gap: 16px;
     }
     .member-card {
         min-width: 240px;
@@ -83,9 +134,9 @@ elif page == "成員介紹":
         border-radius: 999px;
     }
     </style>
-    """
 
-    cards_html = "<div class='member-scroll'>"
+    <div class='member-scroll'>
+    """
     for member in members:
         cards_html += f"""
         <div class='member-card'>
@@ -96,7 +147,7 @@ elif page == "成員介紹":
         """
     cards_html += "</div>"
 
-    st.markdown(card_style + cards_html, unsafe_allow_html=True)
+    components.html(cards_html, height=360, scrolling=True)
     st.write("---")
     st.write("如果你想要，我也可以幫你把每位社員的專長和聯絡方式補上。")
 
