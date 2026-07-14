@@ -91,6 +91,13 @@ elif page == "成員介紹":
     if "selected_member_idx" not in st.session_state:
         st.session_state.selected_member_idx = None
 
+    # 建立隱藏的按鈕用於觸發模態視窗（必須在 HTML 之前）
+    col_buttons = st.columns(len(members))
+    for idx in range(len(members)):
+        with col_buttons[idx % len(members)]:
+            if st.button("", key=f"member-trigger-{idx}", label_visibility="collapsed"):
+                st.session_state.selected_member_idx = idx
+
     # 建立可點擊的成員卡片 HTML
     cards_html = """
     <style>
@@ -162,11 +169,6 @@ elif page == "成員介紹":
         """
     
     cards_html += "</div></div>"
-    
-    # 建立隱藏的按鈕用於觸發模態視窗
-    for idx in range(len(members)):
-        if st.button("", key=f"member-trigger-{idx}", label_visibility="collapsed"):
-            st.session_state.selected_member_idx = idx
     
     components.html(cards_html, height=360, scrolling=True)
 
