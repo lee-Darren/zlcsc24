@@ -63,7 +63,7 @@ if page == "首頁介紹":
     st.subheader("用程式碼敲開未來的門，用熱血寫下我們的青春")
     
     # 放一張示範科技圖（使用 Unsplash 的可直接顯示圖片連結）
-    st.image("https://images.unsplash.com/photo-1518779578993-ec3579fee39f?auto=format&fit=crop&w=1200&q=80", width=700)
+    st.image("https://1drv.ms/i/c/153651177ba027ed/IQD7hhPUi2gIRp3jrtqsOkjiAbVZFO5IMJnDqDKrpgTccxg?e=5Moesdjpg", width=700)
     
     st.markdown("""
     ### 🌟 關於我們
