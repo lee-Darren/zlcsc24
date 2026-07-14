@@ -33,6 +33,7 @@ div[data-testid="stHorizontalBlock"] > div {
     align-items: center !important; 
     justify-content: flex-start !important; /* 改為從上到下排列 */
     position: relative !important;
+    overflow: hidden !important; /* 確保子元件與圓角對齊 */
 }
 
 /* 3. 滑鼠懸停卡片時的陰影與上浮效果 */
@@ -91,9 +92,23 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     pointer-events: none !important; /* 讓點擊穿透到按鈕上 */
 }
 
-/* 8. 把 Streamlit 按鈕做成「透明的面罩」覆蓋在整張卡片正上方 */
+/* 8. 【終極修正】破除 Streamlit 多層容器限制，讓按鈕完美覆蓋「整張卡片」 */
 div[data-testid="stHorizontalBlock"] div[data-testid="element-container"] {
-    position: static !important; /* 釋放 Streamlit 容器限制 */
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: none !important; /* 讓容器本身不阻擋，只留按鈕本體接收點擊 */
+}
+
+div[data-testid="stHorizontalBlock"] div.stButton {
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 100% !important;
+    pointer-events: auto !important; /* 重新開啟點擊 */
 }
 
 div[data-testid="stHorizontalBlock"] button {
@@ -107,7 +122,8 @@ div[data-testid="stHorizontalBlock"] button {
     color: transparent !important; /* 把按鈕原本的文字隱形 */
     box-shadow: none !important;
     cursor: pointer !important;
-    z-index: 99 !important; /* 提高層級，確保它在最上層 */
+    z-index: 999 !important; /* 確保它在整張卡片的最頂層，毫無死角 */
+    border-radius: 16px !important; /* 與外框圓角一致 */
 }
 
 /* 當滑鼠移入卡片時，給一個微透的點擊回饋感 */
@@ -269,7 +285,7 @@ elif page == "成員介紹":
             
     # 2. 顯示「左右滾動卡片列表」
     else:
-        st.write("💡 **左右滑動** 瀏覽幹部，點擊下方卡片即可查看個人詳細資訊！")
+        st.write("💡 **左右滑動** 瀏覽幹部，點擊卡片內任何地方即可查看個人詳細資訊！")
         
         # 建立與成員數量相同的 columns
         cols = st.columns(len(members))
@@ -287,10 +303,11 @@ elif page == "成員介紹":
                 # B. 顯示職稱
                 st.markdown(f'<div class="role-badge-container"><span class="role-badge">{member["role"]}</span></div>', unsafe_allow_html=True)
                 
-                # C. 顯示名字（使用純 HTML 確保名字絕對在卡片內、置中且不會被擠壓切掉）
+                # C. 顯示名字
                 st.markdown(f'<div class="member-name-text">{member["name"]}</div>', unsafe_allow_html=True)
                 
-                # D. 透明點擊重疊按鈕（現在點擊頭像照片、職稱、名字、卡片任何地方都會完美穿透並觸發此按鈕！）
+                # D. 終極無死角透明點擊按鈕
+                # 藉由 CSS 穿透與重新定位，此按鈕現在徹底、無縫地覆蓋了整張卡片的 100% 面積
                 if st.button("", key=f"btn_{member['id']}", use_container_width=True):
                     st.session_state.selected_member = member
                     st.rerun()
