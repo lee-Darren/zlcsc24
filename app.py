@@ -3,7 +3,7 @@ import streamlit as st
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
 
-# 2. 注入穩定的 CSS：強制橫向滾動，並將按鈕與卡片融為一體，且圖片與文字完美置中
+# 2. 注入穩定的 CSS：強制橫向滾動，並讓卡片內所有元件（包含圖片與按鈕）完美置中
 st.markdown("""
 <style>
 /* 1. 強制讓 columns 橫向排列不換行，並產生滾動條 */
@@ -14,6 +14,7 @@ div[data-testid="stHorizontalBlock"] {
     padding: 15px 5px !important;
     gap: 15px !important;
     scroll-behavior: smooth;
+    align-items: stretch !important; /* 確保所有卡片高度一致 */
 }
 
 /* 2. 定義每一張卡片的寬度與外觀 */
@@ -24,10 +25,13 @@ div[data-testid="stHorizontalBlock"] > div {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 15px 10px;
+    padding: 20px 15px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
-    text-align: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important; /* 卡片內部所有項目水位置中 */
+    justify-content: space-between !important;
 }
 
 /* 3. 滑鼠懸停卡片時的陰影與上浮效果 */
@@ -36,10 +40,16 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 4. 確保 Streamlit 原生圖片容器在卡片內絕對居中 */
-div[data-testid="stImage"] {
+/* 4. 強制將 Streamlit 內部的圖片容器對齊置中 */
+div[data-testid="stHorizontalBlock"] div[data-testid="element-container"] {
     display: flex !important;
     justify-content: center !important;
+    width: 100% !important;
+}
+div[data-testid="stHorizontalBlock"] div[data-testid="stImage"] {
+    display: flex !important;
+    justify-content: center !important;
+    width: auto !important;
 }
 
 /* 5. 圓形頭像樣式 */
@@ -48,21 +58,26 @@ div[data-testid="stHorizontalBlock"] img {
     height: 110px !important;
     border-radius: 50% !important;
     object-fit: cover !important;
-    margin: 0 auto 10px !important;
+    margin: 0 auto !important; /* 確保圖片自身置中 */
     display: block !important;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
 /* 6. 職稱標籤樣式 */
+.role-badge-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
 .role-badge {
     background-color: #eef5ff;
     color: #007bff;
     font-size: 13px;
     font-weight: bold;
-    padding: 3px 12px;
+    padding: 4px 12px;
     border-radius: 20px;
     display: inline-block;
-    margin-bottom: 8px;
 }
 
 /* 7. 美化卡片下方的 Streamlit 原生按鈕 */
@@ -74,6 +89,7 @@ div[data-testid="stHorizontalBlock"] button {
     font-weight: bold !important;
     font-size: 14px !important;
     transition: all 0.2s ease !important;
+    width: 100% !important;
 }
 
 div[data-testid="stHorizontalBlock"] button:hover {
@@ -243,13 +259,13 @@ elif page == "成員介紹":
         
         for idx, member in enumerate(members):
             with cols[idx]:
-                # A. 顯示頭像（使用 Streamlit 原生元件，CSS 已設為完美置中）
+                # A. 顯示頭像（透過 CSS 的 element-container 強制置中）
                 st.image(member["img"], use_column_width=False)
                 
                 # B. 顯示職稱
-                st.markdown(f'<div style="text-align:center;"><span class="role-badge">{member["role"]}</span></div>', unsafe_allow_html=True)
+                st.markdown(f'<div class="role-badge-container"><span class="role-badge">{member["role"]}</span></div>', unsafe_allow_html=True)
                 
-                # C. 原生點擊按鈕（移除放大鏡符號）
+                # C. 原生點擊按鈕
                 if st.button(member['name'], key=f"btn_{member['id']}", use_container_width=True):
                     st.session_state.selected_member = member
                     st.rerun()
