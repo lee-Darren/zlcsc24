@@ -31,7 +31,7 @@ div[data-testid="stHorizontalBlock"] > div {
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important; 
-    justify-content: flex-start !important; /* 改為從上到下排列 */
+    justify-content: flex-start !important;
     position: relative !important;
     overflow: hidden !important; /* 確保子元件與圓角對齊 */
 }
@@ -42,17 +42,17 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 4. 自訂頭像外層包裝容器（加上 pointer-events: none 確保點擊穿透） */
+/* 4. 自訂頭像外層包裝容器 */
 .avatar-container {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     width: 100% !important;
     margin: 0 auto 10px auto !important;
-    pointer-events: none !important; /* 讓點擊穿透到按鈕上 */
+    pointer-events: none !important; /* 防止干擾點擊 */
 }
 
-/* 5. 圓形頭像樣式（加上 pointer-events: none 確保點擊穿透） */
+/* 5. 圓形頭像樣式 */
 .custom-circle-avatar {
     width: 110px !important;
     height: 110px !important;
@@ -60,16 +60,16 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     object-fit: cover !important;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
     display: block !important;
-    pointer-events: none !important; /* 讓點擊穿透到按鈕上 */
+    pointer-events: none !important; /* 防止干擾點擊 */
 }
 
-/* 6. 職稱標籤樣式（加上 pointer-events: none 確保點擊穿透） */
+/* 6. 職稱標籤樣式 */
 .role-badge-container {
     width: 100%;
     text-align: center;
     margin-top: 5px;
     margin-bottom: 5px;
-    pointer-events: none !important; /* 讓點擊穿透到按鈕上 */
+    pointer-events: none !important; /* 防止干擾點擊 */
 }
 .role-badge {
     background-color: #eef5ff;
@@ -79,36 +79,29 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     padding: 4px 12px;
     border-radius: 20px;
     display: inline-block;
-    pointer-events: none !important;
+    pointer-events: none !important; /* 防止干擾點擊 */
 }
 
-/* 7. 名字樣式（加上 pointer-events: none 確保點擊穿透） */
+/* 7. 名字樣式 */
 .member-name-text {
     font-size: 16px;
     font-weight: bold;
     color: #334155;
     margin-top: 10px;
     text-align: center;
-    pointer-events: none !important; /* 讓點擊穿透到按鈕上 */
+    pointer-events: none !important; /* 防止干擾點擊 */
 }
 
-/* 8. 【終極修正】破除 Streamlit 多層容器限制，讓按鈕完美覆蓋「整張卡片」 */
-div[data-testid="stHorizontalBlock"] div[data-testid="element-container"] {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    pointer-events: none !important; /* 讓容器本身不阻擋，只留按鈕本體接收點擊 */
-}
-
+/* 8. 【終極放大點擊範圍】將 Streamlit 的按鈕與其父容器全部強制「絕對定位」並鋪滿整張卡片 */
+div[data-testid="stHorizontalBlock"] div[data-testid="element-container"],
 div[data-testid="stHorizontalBlock"] div.stButton {
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    pointer-events: auto !important; /* 重新開啟點擊 */
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 div[data-testid="stHorizontalBlock"] button {
@@ -117,16 +110,17 @@ div[data-testid="stHorizontalBlock"] button {
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    background-color: transparent !important; /* 完全透明，只用來接收點擊 */
+    background-color: transparent !important; /* 完全透明 */
     border: none !important;
-    color: transparent !important; /* 把按鈕原本的文字隱形 */
+    color: transparent !important; /* 隱藏按鈕文字 */
     box-shadow: none !important;
     cursor: pointer !important;
-    z-index: 999 !important; /* 確保它在整張卡片的最頂層，毫無死角 */
-    border-radius: 16px !important; /* 與外框圓角一致 */
+    z-index: 9999 !important; /* 頂天層級，絕對覆蓋在照片、職稱和名字之上 */
+    border-radius: 16px !important; /* 圓角與外框卡片貼合 */
+    margin: 0 !important;
 }
 
-/* 當滑鼠移入卡片時，給一個微透的點擊回饋感 */
+/* 滑鼠移入卡片時，按鈕底色呈現極微透的藍色做點擊回饋 */
 div[data-testid="stHorizontalBlock"] > div:hover button {
     background-color: rgba(0, 123, 255, 0.02) !important; 
 }
@@ -285,7 +279,7 @@ elif page == "成員介紹":
             
     # 2. 顯示「左右滾動卡片列表」
     else:
-        st.write("💡 **左右滑動** 瀏覽幹部，點擊卡片內任何地方即可查看個人詳細資訊！")
+        st.write("💡 點擊卡片內**任何地方**（包含照片、名字、背景）即可查看個人詳細資訊！")
         
         # 建立與成員數量相同的 columns
         cols = st.columns(len(members))
@@ -306,8 +300,7 @@ elif page == "成員介紹":
                 # C. 顯示名字
                 st.markdown(f'<div class="member-name-text">{member["name"]}</div>', unsafe_allow_html=True)
                 
-                # D. 終極無死角透明點擊按鈕
-                # 藉由 CSS 穿透與重新定位，此按鈕現在徹底、無縫地覆蓋了整張卡片的 100% 面積
+                # D. 終極全覆蓋透明按鈕
                 if st.button("", key=f"btn_{member['id']}", use_container_width=True):
                     st.session_state.selected_member = member
                     st.rerun()
