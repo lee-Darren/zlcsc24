@@ -25,15 +25,15 @@ div[data-testid="stHorizontalBlock"] > div {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 20px 15px 25px 15px !important; /* 增加底部 padding，防止名字被擠壓切掉 */
+    padding: 20px 15px 25px 15px !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important; 
     justify-content: flex-start !important;
-    position: relative !important;
-    overflow: hidden !important; /* 確保子元件與圓角對齊 */
+    position: relative !important; /* 作為絕對定位按鈕的基準 */
+    overflow: hidden !important; 
 }
 
 /* 3. 滑鼠懸停卡片時的陰影與上浮效果 */
@@ -49,7 +49,7 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     align-items: center !important;
     width: 100% !important;
     margin: 0 auto 10px auto !important;
-    pointer-events: none !important; /* 防止干擾點擊 */
+    pointer-events: none !important; /* 確保滑鼠事件穿透 */
 }
 
 /* 5. 圓形頭像樣式 */
@@ -60,7 +60,7 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     object-fit: cover !important;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
     display: block !important;
-    pointer-events: none !important; /* 防止干擾點擊 */
+    pointer-events: none !important;
 }
 
 /* 6. 職稱標籤樣式 */
@@ -69,7 +69,7 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     text-align: center;
     margin-top: 5px;
     margin-bottom: 5px;
-    pointer-events: none !important; /* 防止干擾點擊 */
+    pointer-events: none !important;
 }
 .role-badge {
     background-color: #eef5ff;
@@ -79,7 +79,7 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     padding: 4px 12px;
     border-radius: 20px;
     display: inline-block;
-    pointer-events: none !important; /* 防止干擾點擊 */
+    pointer-events: none !important;
 }
 
 /* 7. 名字樣式 */
@@ -89,11 +89,10 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     color: #334155;
     margin-top: 10px;
     text-align: center;
-    pointer-events: none !important; /* 防止干擾點擊 */
+    pointer-events: none !important;
 }
 
-/* 8. 【終極放大點擊範圍】將 Streamlit 的按鈕與其父容器全部強制「絕對定位」並鋪滿整張卡片 */
-div[data-testid="stHorizontalBlock"] div[data-testid="element-container"],
+/* 8. 【終極放大點擊範圍】僅將按鈕元件強制絕對定位並撐滿「整張卡片 Column」 */
 div[data-testid="stHorizontalBlock"] div.stButton {
     position: absolute !important;
     top: 0 !important;
@@ -102,6 +101,7 @@ div[data-testid="stHorizontalBlock"] div.stButton {
     height: 100% !important;
     margin: 0 !important;
     padding: 0 !important;
+    z-index: 9999 !important; /* 確保疊在所有文字與照片之上 */
 }
 
 div[data-testid="stHorizontalBlock"] button {
@@ -115,12 +115,12 @@ div[data-testid="stHorizontalBlock"] button {
     color: transparent !important; /* 隱藏按鈕文字 */
     box-shadow: none !important;
     cursor: pointer !important;
-    z-index: 9999 !important; /* 頂天層級，絕對覆蓋在照片、職稱和名字之上 */
-    border-radius: 16px !important; /* 圓角與外框卡片貼合 */
+    border-radius: 16px !important; /* 貼合卡片圓角 */
     margin: 0 !important;
+    padding: 0 !important;
 }
 
-/* 滑鼠移入卡片時，按鈕底色呈現極微透的藍色做點擊回饋 */
+/* 當滑鼠移入卡片時，按鈕呈現極微透的藍色做點擊回饋 */
 div[data-testid="stHorizontalBlock"] > div:hover button {
     background-color: rgba(0, 123, 255, 0.02) !important; 
 }
@@ -286,21 +286,21 @@ elif page == "成員介紹":
         
         for idx, member in enumerate(members):
             with cols[idx]:
-                # A. 顯示頭像（透過 CSS 完美、強制左右置中）
+                # A. 合併顯示頭像、職稱與名字在同一個 markdown 中，保持佈局乾淨
                 st.markdown(
-                    f'<div class="avatar-container">'
-                    f'<img src="{member["img"]}" class="custom-circle-avatar" />'
-                    f'</div>', 
+                    f"""
+                    <div class="avatar-container">
+                        <img src="{member["img"]}" class="custom-circle-avatar" />
+                    </div>
+                    <div class="role-badge-container">
+                        <span class="role-badge">{member["role"]}</span>
+                    </div>
+                    <div class="member-name-text">{member["name"]}</div>
+                    """, 
                     unsafe_allow_html=True
                 )
                 
-                # B. 顯示職稱
-                st.markdown(f'<div class="role-badge-container"><span class="role-badge">{member["role"]}</span></div>', unsafe_allow_html=True)
-                
-                # C. 顯示名字
-                st.markdown(f'<div class="member-name-text">{member["name"]}</div>', unsafe_allow_html=True)
-                
-                # D. 終極全覆蓋透明按鈕
+                # B. 透明按鈕（藉由全新 CSS，直接絕對定位橫跨覆蓋整張卡片 100% 寬高，毫無死角）
                 if st.button("", key=f"btn_{member['id']}", use_container_width=True):
                     st.session_state.selected_member = member
                     st.rerun()
