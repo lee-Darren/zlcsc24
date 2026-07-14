@@ -3,7 +3,7 @@ import streamlit as st
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
 
-# 2. 注入穩定的 CSS：強制橫向滾動，並將按鈕與卡片融為一體
+# 2. 注入穩定的 CSS：強制橫向滾動，並將按鈕與卡片融為一體，且圖片與文字完美置中
 st.markdown("""
 <style>
 /* 1. 強制讓 columns 橫向排列不換行，並產生滾動條 */
@@ -36,7 +36,13 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 4. 圓形頭像樣式（使用原生 st.image 渲染後套用此樣式） */
+/* 4. 確保 Streamlit 原生圖片容器在卡片內絕對居中 */
+div[data-testid="stImage"] {
+    display: flex !important;
+    justify-content: center !important;
+}
+
+/* 5. 圓形頭像樣式 */
 div[data-testid="stHorizontalBlock"] img {
     width: 110px !important;
     height: 110px !important;
@@ -47,7 +53,7 @@ div[data-testid="stHorizontalBlock"] img {
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-/* 5. 職稱標籤樣式 */
+/* 6. 職稱標籤樣式 */
 .role-badge {
     background-color: #eef5ff;
     color: #007bff;
@@ -59,7 +65,7 @@ div[data-testid="stHorizontalBlock"] img {
     margin-bottom: 8px;
 }
 
-/* 6. 美化卡片下方的 Streamlit 原生按鈕，使其看起來像扁平化設計 */
+/* 7. 美化卡片下方的 Streamlit 原生按鈕 */
 div[data-testid="stHorizontalBlock"] button {
     border-radius: 20px !important;
     background-color: #f8fafc !important;
@@ -76,7 +82,7 @@ div[data-testid="stHorizontalBlock"] button:hover {
     border-color: #007bff !important;
 }
 
-/* 7. 滾動條美化 */
+/* 8. 滾動條美化 */
 div[data-testid="stHorizontalBlock"]::-webkit-scrollbar {
     height: 8px;
 }
@@ -98,7 +104,7 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
 st.sidebar.title("🧭 網站導覽")
 page = st.sidebar.radio("請選擇頁面：", ["首頁介紹", "成員介紹", "聯絡我們"])
 
-# 已合併重複職務之成員資料（使用穩定的 dicebear 動態頭像服務，不挑瀏覽器，100% 顯現）
+# 成員資料
 members = [
     {
         "id": "0", 
@@ -230,22 +236,21 @@ elif page == "成員介紹":
             
     # 2. 顯示「左右滾動卡片列表」
     else:
-        st.write("💡 **左右滑動** 瀏覽幹部，點擊下方按鈕即可查看個人詳細資訊！")
+        st.write("💡 **左右滑動** 瀏覽幹部，點擊下方姓名即可查看個人詳細資訊！")
         
         # 建立與成員數量相同的 columns（CSS 會防止換行並自動加上橫向捲軸）
         cols = st.columns(len(members))
         
         for idx, member in enumerate(members):
             with cols[idx]:
-                # A. 顯示頭像（使用 Streamlit 原生元件，確保 100% 載入且不會被安全性政策封鎖）
+                # A. 顯示頭像（使用 Streamlit 原生元件，CSS 已設為完美置中）
                 st.image(member["img"], use_column_width=False)
                 
                 # B. 顯示職稱
                 st.markdown(f'<div style="text-align:center;"><span class="role-badge">{member["role"]}</span></div>', unsafe_allow_html=True)
                 
-                # C. 原生點擊按鈕（作為卡片的名字與點選觸發點）
-                # 按鈕名稱直接顯示名字，並加上放大鏡圖示引導點擊
-                if st.button(f"🔎 {member['name']}", key=f"btn_{member['id']}", use_container_width=True):
+                # C. 原生點擊按鈕（移除放大鏡符號）
+                if st.button(member['name'], key=f"btn_{member['id']}", use_container_width=True):
                     st.session_state.selected_member = member
                     st.rerun()
 
