@@ -63,7 +63,7 @@ if page == "首頁介紹":
     st.subheader("用程式碼敲開未來的門，用熱血寫下我們的青春")
     
     # 放一張示範科技圖（使用 Unsplash 的可直接顯示圖片連結）
-    st.image("https://github.com/lee-Darren/zlcsc24/blob/6c97af340825b5397ec6a595ba852c7620530f13/1784017363261.jpg", width=700)
+    st.image("https://raw.githubusercontent.com/lee-Darren/zlcsc24/main/1784017363261.jpg", width=700)
     
     st.markdown("""
     ### 🌟 關於我們
