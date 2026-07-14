@@ -320,56 +320,58 @@ elif page == "成員介紹":
                     st.rerun()
 
 elif page == "聯絡我們":
-    import requests  # 引入發送請求的套件
+    import urllib.parse  # 用於將中文安全地轉換為網址編碼
 
     st.title("📬 聯絡社團幹部")
-    st.write("有任何加入社團、合作 or 課程問題，請填寫表單（送出後幹部將會在 `zlcsc24@gmail.com` 信箱收到您的訊息）：")
+    st.write("填寫下方表單後，點擊「點我開啟信箱寄出」按鈕，系統會自動為您填妥郵件內容，您只需點擊傳送即可！")
     
-    # 這裡直接填寫你們的社團信箱
     CLUB_EMAIL = "zlcsc24@gmail.com"
     
-    with st.form("my_form"):
-        name = st.text_input("你的稱呼：")
-        class_num = st.text_input("班級 / 學號（選填）：")
-        email = st.text_input("聯絡 Email（以便學長姐回信給您）：")
-        msg = st.text_area("你想問的問題或回饋：")
+    # 這裡不使用 st.form，讓使用者輸入時能即時連動按鈕
+    name = st.text_input("你的稱呼：")
+    class_num = st.text_input("班級 / 學號（選填）：")
+    msg = st.text_area("你想問的問題或回饋：")
+    
+    # 當必填欄位都有填寫時，才顯示寄信按鈕
+    if name.strip() and msg.strip():
+        # 建立郵件主旨與內容格式
+        subject = f"【中崙資研官網提問】來自 {name} 的訊息"
+        body = f"你好，我是 {name}。\n"
+        if class_num.strip():
+            body += f"班級/學號：{class_num}\n"
+        body += f"\n我的提問與回饋如下：\n{msg}\n"
         
-        submit_button = st.form_submit_button(label="送出表單")
+        # 將中文與換行字元編碼為網址安全格式
+        safe_subject = urllib.parse.quote(subject)
+        safe_body = urllib.parse.quote(body)
         
-        if submit_button:
-            # 基本欄位驗證
-            if not name.strip():
-                st.warning("請填寫您的稱呼唷！")
-            elif not email.strip() or "@" not in email:
-                st.warning("請輸入正確的聯絡 Email，學長姐才回得信喔！")
-            elif not msg.strip():
-                st.warning("請輸入您想問的問題或回饋！")
-            else:
-                # 顯示載入動畫
-                with st.spinner("正在為您傳送訊息給學長姐..."):
-                    # 準備發送給 Formspree 的資料
-                    payload = {
-                        "稱呼": name,
-                        "_replyto": email,    # Formspree 會自動將此設為回信地址
-                        "班級/學號": class_num,
-                        "提問內容": msg
-                    }
-                    
-                    try:
-                        # 將請求發送給 Formspree 對應你們信箱的專屬端點
-                        response = requests.post(
-                            f"https://formspree.io/f/{CLUB_EMAIL}", 
-                            json=payload,
-                            headers={"Accept": "application/json"},
-                            timeout=10
-                        )
-                        
-                        # Formspree 第一次使用時會回傳需要驗證
-                        if response.status_code == 200 or response.status_code == 302:
-                            st.success(f"🎉 表單已送出！請幹部立刻檢查 `zlcsc24@gmail.com` 信箱進行「第一次啟用確認」喔！")
-                        else:
-                            st.error("😭 傳送失敗，請稍後再試，或直接聯絡幹部！")
-                    except Exception as e:
-                        st.error("⚠️ 連線超時或網路異常，請檢查您的網路狀態！")
-                    except Exception as e:
-                        st.error("⚠️ 連線超時或網路異常，請檢查您的網路狀態！")
+        # 產生 mailto 連結
+        mailto_url = f"mailto:{CLUB_EMAIL}?subject={safe_subject}&body={safe_body}"
+        
+        st.markdown("---")
+        st.success("🎉 郵件內容已自動生成完畢！請點選下方按鈕寄出：")
+        
+        # 顯示一個精美的按鈕，點擊後直接調用系統郵件發送
+        st.markdown(
+            f"""
+            <a href="{mailto_url}" target="_blank" style="text-decoration: none;">
+                <div style="
+                    background-color: #007bff;
+                    color: white;
+                    padding: 12px 24px;
+                    text-align: center;
+                    border-radius: 8px;
+                    font-weight: bold;
+                    font-size: 16px;
+                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+                    transition: background-color 0.2s;
+                    cursor: pointer;
+                ">
+                    ✉️ 點我開啟信箱寄出郵件
+                </div>
+            </a>
+            """,
+            unsafe_allow_html=True
+        )
+    else:
+        st.info("💡 請先填寫「你的稱呼」與「問題或回饋」，系統就會自動為您生成寄信按鈕喔！")
