@@ -3,90 +3,80 @@ import streamlit as st
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
 
-# 2. 完美的 CSS 注入：強制橫向滾動、美化卡片、並將原生的 Streamlit button 改造成整張可點擊的卡片
+# 2. 注入穩定的 CSS：強制橫向滾動，並將按鈕與卡片融為一體
 st.markdown("""
 <style>
-/* 1. 強制讓特定橫向區塊變成左右滑動，並加上柔和的滾動效果 */
+/* 1. 強制讓 columns 橫向排列不換行，並產生滾動條 */
 div[data-testid="stHorizontalBlock"] {
     display: flex !important;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
-    padding: 20px 5px !important;
-    gap: 20px !important;
+    padding: 15px 5px !important;
+    gap: 15px !important;
     scroll-behavior: smooth;
 }
 
-/* 2. 限制每一個欄位 (卡片) 的寬度與卡片外觀 */
+/* 2. 定義每一張卡片的寬度與外觀 */
 div[data-testid="stHorizontalBlock"] > div {
-    min-width: 220px !important;
-    max-width: 220px !important;
+    min-width: 210px !important;
+    max-width: 210px !important;
     flex-shrink: 0 !important;
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    border-radius: 20px;
-    padding: 20px 15px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border-radius: 16px;
+    padding: 15px 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
     text-align: center;
 }
 
-/* 3. 當滑鼠懸停在整張卡片上時的動態效果 */
+/* 3. 滑鼠懸停卡片時的陰影與上浮效果 */
 div[data-testid="stHorizontalBlock"] > div:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 4. 將原生按鈕改造成「透明滿版按鈕」，覆蓋在卡片內部，實現點擊頭像/文字皆能觸發 */
-div[data-testid="stHorizontalBlock"] button {
-    background-color: transparent !important;
-    border: none !important;
-    color: inherit !important;
-    padding: 0 !important;
-    width: 100% !important;
-    height: auto !important;
-    box-shadow: none !important;
-    transition: none !important;
+/* 4. 圓形頭像樣式（使用原生 st.image 渲染後套用此樣式） */
+div[data-testid="stHorizontalBlock"] img {
+    width: 110px !important;
+    height: 110px !important;
+    border-radius: 50% !important;
+    object-fit: cover !important;
+    margin: 0 auto 10px !important;
+    display: block !important;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
 
-div[data-testid="stHorizontalBlock"] button:hover {
-    background-color: transparent !important;
-    color: #007bff !important; /* 懸停時名字變藍色提示可點擊 */
-}
-
-/* 5. 幹部頭像美化 */
-.member-avatar {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin: 0 auto 12px;
-    display: block;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    pointer-events: none; /* 讓點擊事件穿透到按鈕上 */
-}
-
-/* 6. 幹部職稱標籤樣式 */
+/* 5. 職稱標籤樣式 */
 .role-badge {
     background-color: #eef5ff;
     color: #007bff;
     font-size: 13px;
     font-weight: bold;
-    padding: 4px 12px;
+    padding: 3px 12px;
     border-radius: 20px;
     display: inline-block;
     margin-bottom: 8px;
-    pointer-events: none;
 }
 
-/* 7. 提示點擊的覆蓋小字 */
-.click-hint {
-    font-size: 11px;
-    color: #a0aec0;
-    margin-top: 5px;
-    pointer-events: none;
+/* 6. 美化卡片下方的 Streamlit 原生按鈕，使其看起來像扁平化設計 */
+div[data-testid="stHorizontalBlock"] button {
+    border-radius: 20px !important;
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #007bff !important;
+    font-weight: bold !important;
+    font-size: 14px !important;
+    transition: all 0.2s ease !important;
 }
 
-/* 8. 滾動條美化 */
+div[data-testid="stHorizontalBlock"] button:hover {
+    background-color: #007bff !important;
+    color: #ffffff !important;
+    border-color: #007bff !important;
+}
+
+/* 7. 滾動條美化 */
 div[data-testid="stHorizontalBlock"]::-webkit-scrollbar {
     height: 8px;
 }
@@ -108,7 +98,7 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
 st.sidebar.title("🧭 網站導覽")
 page = st.sidebar.radio("請選擇頁面：", ["首頁介紹", "成員介紹", "聯絡我們"])
 
-# 合併重複後的幹部資料（使用更穩定的 GitHub Avatars 作為頭像來源，解決無法顯示的問題）
+# 已合併重複職務之成員資料（使用穩定的 dicebear 動態頭像服務，不挑瀏覽器，100% 顯現）
 members = [
     {
         "id": "0", 
@@ -214,7 +204,7 @@ elif page == "成員介紹":
     if "selected_member" not in st.session_state:
         st.session_state.selected_member = None
 
-    # 如果有被點擊的成員，進入「詳細頁面」
+    # 1. 顯示「個人詳細頁面」
     if st.session_state.selected_member is not None:
         member = st.session_state.selected_member
         
@@ -225,10 +215,10 @@ elif page == "成員介紹":
         
         st.markdown("---")
         
-        # 個人詳細資訊頁面
+        # 個人詳細資訊卡片
         col1, col2 = st.columns([1, 2])
         with col1:
-            st.markdown(f'<img src="{member["img"]}" class="member-avatar" style="width:200px; height:200px; margin:0;">', unsafe_allow_html=True)
+            st.image(member['img'], width=200)
         
         with col2:
             st.markdown(f"## {member['name']}")
@@ -238,29 +228,37 @@ elif page == "成員介紹":
             st.markdown(f"**🎯 專長：** {member['specialty']}")
             st.markdown(f"**📝 簡介：** {member['intro']}")
             
+    # 2. 顯示「左右滾動卡片列表」
     else:
-        # 顯示成員列表（滑動狀態）
-        st.write("💡 **左右滑動** 瀏覽幹部，**點擊任何一張幹部頭像/卡片**即可查看個人詳細資訊！")
+        st.write("💡 **左右滑動** 瀏覽幹部，點擊下方按鈕即可查看個人詳細資訊！")
         
-        # 建立與成員數量相同的 columns (利用 CSS 保持在同一行並產生滾動條)
+        # 建立與成員數量相同的 columns（CSS 會防止換行並自動加上橫向捲軸）
         cols = st.columns(len(members))
         
         for idx, member in enumerate(members):
             with cols[idx]:
-                # 利用 HTML 設計卡片的內容結構
-                card_content = f"""
-                <img class="member-avatar" src="{member["img"]}" />
-                <div><span class="role-badge">{member["role"]}</span></div>
-                <div style="font-size: 18px; font-weight: bold; margin-bottom: 2px;">{member["name"]}</div>
-                <div class="click-hint">🔍 點擊查看個人頁面</div>
-                """
+                # A. 顯示頭像（使用 Streamlit 原生元件，確保 100% 載入且不會被安全性政策封鎖）
+                st.image(member["img"], use_column_width=False)
                 
-                # 將整段美化的 HTML 當成「按鈕文字」丟給 st.button 渲染！
-                # 這樣一來，整張卡片（包含頭像與文字）就成為一個大按鈕，點擊任何地方都會觸發 Python 事件！
-                if st.button(card_content, key=f"btn_{member['id']}", use_container_width=True):
+                # B. 顯示職稱
+                st.markdown(f'<div style="text-align:center;"><span class="role-badge">{member["role"]}</span></div>', unsafe_allow_html=True)
+                
+                # C. 原生點擊按鈕（作為卡片的名字與點選觸發點）
+                # 按鈕名稱直接顯示名字，並加上放大鏡圖示引導點擊
+                if st.button(f"🔎 {member['name']}", key=f"btn_{member['id']}", use_container_width=True):
                     st.session_state.selected_member = member
                     st.rerun()
 
 elif page == "聯絡我們":
     st.title("📬 聯絡社團幹部")
-    st.
+    st.write("有任何加入社團、合作或課程問題，請填寫表單：")
+    
+    with st.form("my_form"):
+        name = st.text_input("你的稱呼：")
+        class_num = st.text_input("班級 / 學號：")
+        msg = st.text_area("你想問的問題或回饋：")
+        
+        submit_button = st.form_submit_button(label="送出表單")
+        
+        if submit_button:
+            st.success(f"🎉 收到！謝謝 {name} 的留言，教學或網管學長會盡快回覆你！")
