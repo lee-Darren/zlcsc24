@@ -3,7 +3,7 @@ import streamlit as st
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
 
-# 2. 注入穩定的 CSS：強制橫向滾動，並讓卡片內所有元件（包含圖片與按鈕）完美置中
+# 2. 注入極致置中的 CSS 樣式
 st.markdown("""
 <style>
 /* 1. 強制讓 columns 橫向排列不換行，並產生滾動條 */
@@ -14,7 +14,7 @@ div[data-testid="stHorizontalBlock"] {
     padding: 15px 5px !important;
     gap: 15px !important;
     scroll-behavior: smooth;
-    align-items: stretch !important; /* 確保所有卡片高度一致 */
+    align-items: stretch !important;
 }
 
 /* 2. 定義每一張卡片的寬度與外觀 */
@@ -30,7 +30,7 @@ div[data-testid="stHorizontalBlock"] > div {
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex !important;
     flex-direction: column !important;
-    align-items: center !important; /* 卡片內部所有項目水位置中 */
+    align-items: center !important; /* 確保內件水平置中 */
     justify-content: space-between !important;
 }
 
@@ -40,16 +40,15 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 4. 強制將 Streamlit 內部的圖片容器對齊置中 */
-div[data-testid="stHorizontalBlock"] div[data-testid="element-container"] {
-    display: flex !important;
-    justify-content: center !important;
-    width: 100% !important;
-}
+/* 4. 【核心修正】強力強制 Streamlit 的圖片容器在欄位中水平置中 */
+div[data-testid="stHorizontalBlock"] div[data-testid="element-container"],
+div[data-testid="stHorizontalBlock"] div[data-testid="stImageFilterTarget"],
 div[data-testid="stHorizontalBlock"] div[data-testid="stImage"] {
     display: flex !important;
     justify-content: center !important;
-    width: auto !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 0 auto !important;
 }
 
 /* 5. 圓形頭像樣式 */
@@ -58,7 +57,7 @@ div[data-testid="stHorizontalBlock"] img {
     height: 110px !important;
     border-radius: 50% !important;
     object-fit: cover !important;
-    margin: 0 auto !important; /* 確保圖片自身置中 */
+    margin: 0 auto !important; /* 強制圖片本身置中 */
     display: block !important;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
@@ -259,7 +258,7 @@ elif page == "成員介紹":
         
         for idx, member in enumerate(members):
             with cols[idx]:
-                # A. 顯示頭像（透過 CSS 的 element-container 強制置中）
+                # A. 顯示頭像（全新修正的 CSS 會徹底將其置中）
                 st.image(member["img"], use_column_width=False)
                 
                 # B. 顯示職稱
