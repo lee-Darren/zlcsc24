@@ -152,7 +152,7 @@ elif page == "成員介紹":
 
     components.html(cards_html, height=360, scrolling=True)
     st.write("---")
-    st.write("如果你想要，我也可以幫你把每位社員的專長和聯絡方式補上。")
+    st.write("歡迎點擊頭像查看更多幹部資訊")
 
 elif page == "社課講義":
     st.title("📚 歷屆社課資源庫")
