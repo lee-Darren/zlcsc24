@@ -320,68 +320,56 @@ elif page == "成員介紹":
                     st.rerun()
 
 elif page == "聯絡我們":
+    import requests
+
     st.title("📬 聯絡社團幹部")
-    st.write("有任何加入社團、合作 or 課程問題，請填寫下方表單，送出後幹部將會在 `zlcsc24@gmail.com` 信箱收到您的訊息：")
+    st.write("有任何加入社團、合作 or 課程問題，請填寫表單：")
     
-    # 已為 zlcsc24@gmail.com 啟用並綁定完畢的專用 Key
-    WEB3FORMS_KEY = "fae75878-ba6b-47e2-8231-9a7442eb9bc3"
+    # ==================== [ ⚙️ 已自動為您設定好的 Google 表單資訊 ] ====================
+    FORM_ID = "1FAIpQLScvl7BmxZ4CyLnzJSofEyvlF1KP6Vxdg35hp7UGmM8bBUSXHQ"
+    
+    ENTRY_NAME = "entry.1983057393"   # 你的稱呼
+    ENTRY_EMAIL = "entry.1501625902"  # 聯絡 Email
+    ENTRY_CLASS = "entry.1118178125"  # 班級 / 學號（選填）
+    ENTRY_MSG = "entry.1340156976"    # 你想問的問題或回饋
+    # ==============================================================================
 
-    # 使用原生 HTML/CSS 建立與 Streamlit 風格完美融合的表單
-    # 這能確保 100% 傳送成功，不需要使用者額外開啟任何郵件軟體
-    st.markdown(
-        f"""
-        <div style="background-color: #f8fafc; padding: 30px; border-radius: 16px; border: 1px solid #e2e8f0; max-width: 600px; margin: 0 auto;">
-            <form action="https://api.web3forms.com/submit" method="POST">
-                <!-- 隱藏的金鑰與設定（Web3Forms 專用） -->
-                <input type="hidden" name="access_key" value="{WEB3FORMS_KEY}">
-                <input type="hidden" name="subject" value="【中崙資研官網新提問】有人在官網留言囉！">
-                <input type="hidden" name="from_name" value="中崙資研官網表單">
-                
-                <!-- 如果成功送出，自動返回原來的 Streamlit 頁面（請替換為你的 Streamlit 部署網址，目前預設為感謝頁面） -->
-                <input type="hidden" name="redirect" value="https://web3forms.com/success">
-
-                <!-- 1. 稱呼欄位 -->
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #334155;">你的稱呼： <span style="color: red;">*</span></label>
-                    <input type="text" name="name" required placeholder="例如：王小明" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px;">
-                </div>
-
-                <!-- 2. Email 欄位（對手點擊回信時，系統會自動帶入此 Email） -->
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #334155;">聯絡 Email： <span style="color: red;">*</span></label>
-                    <input type="email" name="email" required placeholder="例如：your-email@gmail.com" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px;">
-                </div>
-
-                <!-- 3. 班級/學號欄位 -->
-                <div style="margin-bottom: 20px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #334155;">班級 / 學號（選填）：</label>
-                    <input type="text" name="class_number" placeholder="例如：101 / 99999" style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px;">
-                </div>
-
-                <!-- 4. 提問內容 -->
-                <div style="margin-bottom: 25px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #334155;">你想問的問題或回饋： <span style="color: red;">*</span></label>
-                    <textarea name="message" required rows="5" placeholder="請輸入您想詢問的詳細內容..." style="width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; resize: vertical;"></textarea>
-                </div>
-
-                <!-- 5. 提交按鈕 -->
-                <button type="submit" style="
-                    width: 100%;
-                    background-color: #007bff;
-                    color: white;
-                    padding: 12px;
-                    border: none;
-                    border-radius: 8px;
-                    font-weight: bold;
-                    font-size: 16px;
-                    cursor: pointer;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-                    transition: background-color 0.2s;
-                ">
-                    🚀 點我一次完成送出
-                </button>
-            </form>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
+    with st.form("my_form"):
+        name = st.text_input("你的稱呼：")
+        email = st.text_input("聯絡 Email：")
+        class_num = st.text_input("班級 / 學號（選填）：")
+        msg = st.text_area("你想問的問題或回饋：")
+        
+        submit_button = st.form_submit_button(label="🚀 送出表單")
+        
+        if submit_button:
+            if not name.strip():
+                st.warning("請填寫您的稱呼唷！")
+            elif not email.strip() or "@" not in email:
+                st.warning("請輸入正確的聯絡 Email！")
+            elif not msg.strip():
+                st.warning("請輸入您想問的問題或回饋！")
+            else:
+                with st.spinner("正在為您傳送訊息給學長姐..."):
+                    # Google 表單背景提交的 API 網址
+                    post_url = f"https://docs.google.com/forms/d/e/{FORM_ID}/formResponse"
+                    
+                    # 封裝要傳送的資料
+                    payload = {
+                        ENTRY_NAME: name,
+                        ENTRY_EMAIL: email,
+                        ENTRY_CLASS: class_num,
+                        ENTRY_MSG: msg
+                    }
+                    
+                    try:
+                        # 模擬瀏覽器送出表單資料
+                        response = requests.post(post_url, data=payload, timeout=10)
+                        
+                        # Google 表單只要送出成功，通常會回傳 status_code 200
+                        if response.status_code == 200:
+                            st.success(f"🎉 傳送成功！謝謝 {name} 的留言，學長姐會盡快回覆到您的信箱：{email}！")
+                        else:
+                            st.error("😭 傳送失敗，請稍後再試，或直接聯絡幹部！")
+                    except Exception as e:
+                        st.error("⚠️ 連線超時，請檢查您的網路狀態！")
