@@ -6,10 +6,6 @@ st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", l
 
 st.markdown("""
 <style>
-.block-container {
-    padding: 1rem 3rem;
-    text-align: center;
-}
 .member-scroll {
     display: flex;
     justify-content: center;
