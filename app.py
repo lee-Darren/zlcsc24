@@ -235,4 +235,87 @@ members = [
 
 # 3. 根據使用者點選的頁面，顯示不同的內容
 if page == "首頁介紹":
-    st.title("歡迎
+    st.title("歡迎來到中崙資研")
+    st.subheader("這裡是最適合你的資訊研究社")
+    
+    st.image("https://raw.githubusercontent.com/lee-Darren/zlcsc24/main/1784017363261.jpg", width=700)
+    
+    st.markdown("""
+    ### 🌟 關於我們
+    我們是熱愛技術、喜歡動手實作的科技社團。無論你是程式小白還是大神的轉世，這裡都有你的舞台！
+    * **學習內容**：Python 基礎、網路爬蟲、AI 應用、基礎演算法。
+    * **社團活動**：技術交流會、專題黑客松、學長姐經驗傳承。
+    """)
+
+elif page == "成員介紹":
+    st.title("🧑‍🤝‍🧑 成員介紹")
+
+    # 初始化追蹤變數
+    if "selected_member" not in st.session_state:
+        st.session_state.selected_member = None
+
+    # 1. 顯示「個人詳細頁面」
+    if st.session_state.selected_member is not None:
+        member = st.session_state.selected_member
+        
+        # 返回按鈕
+        if st.button("← 返回成員列表"):
+            st.session_state.selected_member = None
+            st.rerun()
+        
+        st.markdown("---")
+        
+        # 個人詳細資訊卡片
+        col1, col2 = st.columns([1, 2])
+        with col1:
+            st.image(member['img'], width=200)
+        
+        with col2:
+            st.markdown(f"## {member['name']}")
+            st.markdown(f'<span class="role-badge" style="font-size: 15px;">{member["role"]}</span>', unsafe_allow_html=True)
+            st.markdown("---")
+            st.markdown(f"**📧 Email：** {member['email']}")
+            st.markdown(f"**🎯 專長：** {member['specialty']}")
+            st.markdown(f"**📝 簡介：** {member['intro']}")
+            
+    # 2. 顯示「左右滾動卡片列表」
+    else:
+        st.write("💡 點擊卡片內**任何地方**（包含照片、名字、背景）即可查看個人詳細資訊！")
+        
+        # 建立與成員數量相同的 columns
+        cols = st.columns(len(members))
+        
+        for idx, member in enumerate(members):
+            with cols[idx]:
+                # A. 顯示頭像、職稱與名字在同一個 markdown 中
+                st.markdown(
+                    f"""
+                    <div class="avatar-container">
+                        <img src="{member["img"]}" class="custom-circle-avatar" />
+                    </div>
+                    <div class="role-badge-container">
+                        <span class="role-badge">{member["role"]}</span>
+                    </div>
+                    <div class="member-name-text">{member["name"]}</div>
+                    """, 
+                    unsafe_allow_html=True
+                )
+                
+                # B. 透明按鈕（透過 CSS :has 篩選器，將按鈕元件與其外層容器完美定位為 absolute 並鋪滿卡片）
+                if st.button("", key=f"btn_{member['id']}", use_container_width=True):
+                    st.session_state.selected_member = member
+                    st.rerun()
+
+elif page == "聯絡我們":
+    st.title("📬 聯絡社團幹部")
+    st.write("有任何加入社團、合作 or 課程問題，請填寫表單：")
+    
+    with st.form("my_form"):
+        name = st.text_input("你的稱呼：")
+        class_num = st.text_input("班級 / 學號：")
+        msg = st.text_area("你想問的問題或回饋：")
+        
+        submit_button = st.form_submit_button(label="送出表單")
+        
+        if submit_button:
+            st.success(f"🎉 收到！謝謝 {name} 的留言，教學或網管學長會盡快回覆你！")
