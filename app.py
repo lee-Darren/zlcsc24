@@ -323,32 +323,37 @@ elif page == "聯絡我們":
     import requests  # 引入發送請求的套件
 
     st.title("📬 聯絡社團幹部")
-    st.write("有任何加入社團、合作 or 課程問題，請填寫表單：")
+    st.write("有任何加入社團、合作 or 課程問題，請填寫表單（送出後幹部將會在 `zlcsc24@gmail.com` 信箱收到您的訊息）：")
     
     # 這裡已經為 zlcsc24@gmail.com 產生好專用的 Access Key
-    WEB3FORMS_KEY = "fae75878-ba6b-47e2-8231-9a7442eb9bc3"
+    WEB3FORMS_KEY = "5e3aee67-deca-4ed9-b708-d8f90567b5db"
     
     with st.form("my_form"):
         name = st.text_input("你的稱呼：")
-        class_num = st.text_input("班級 / 學號：")
+        class_num = st.text_input("班級 / 學號（選填）：")
+        email = st.text_input("聯絡 Email（以便學長姐回信給您）：")  # 新增 Email 欄位
         msg = st.text_area("你想問的問題或回饋：")
         
         submit_button = st.form_submit_button(label="送出表單")
         
         if submit_button:
-            # 基本欄位驗證，避免學弟妹寄送空訊息
+            # 基本欄位驗證
             if not name.strip():
                 st.warning("請填寫您的稱呼唷！")
+            elif not email.strip() or "@" not in email:
+                st.warning("請輸入正確的聯絡 Email，學長姐才回得信喔！")
             elif not msg.strip():
                 st.warning("請輸入您想問的問題或回饋！")
             else:
                 # 顯示載入動畫
                 with st.spinner("正在為您傳送訊息給學長姐..."):
+                    # 這裡的 key 必須對應 Web3Forms 的規則，"email" 欄位會被自動設為 Reply-To
                     payload = {
                         "access_key": WEB3FORMS_KEY,
                         "subject": f"【中崙資研官網提問】來自 {name} 的訊息",
                         "from_name": "中崙資研官網表單",
-                        "稱呼": name,
+                        "name": name,          # 送件人姓名
+                        "email": email,        # 送件人 Email（Web3Forms 會自動偵測此欄位並設定 Reply-To）
                         "班級/學號": class_num,
                         "提問內容": msg
                     }
@@ -363,7 +368,7 @@ elif page == "聯絡我們":
                         result = response.json()
                         
                         if response.status_code == 200 and result.get("success"):
-                            st.success(f"🎉 傳送成功！謝謝 {name} 的留言，教學或網管學長會盡快回覆你！")
+                            st.success(f"🎉 傳送成功！謝謝 {name} 的留言，教學或網管學長會盡快回覆到您的信箱：{email}！")
                         else:
                             st.error("😭 傳送失敗，API 暫時無回應，請稍後再試，或直接聯絡幹部！")
                     except Exception as e:
