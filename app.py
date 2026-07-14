@@ -1,31 +1,196 @@
 import streamlit as st
-import streamlit.components.v1 as components
 
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
 
-# 初始化 session state，用來追蹤目前選中的成員與觸發重新渲染
-if "selected_member" not in st.session_state:
-    st.session_state.selected_member = None
+# 2. 完美的 CSS 注入：強制橫向滾動、美化卡片、並將原生的 Streamlit button 改造成整張可點擊的卡片
+st.markdown("""
+<style>
+/* 1. 強制讓特定橫向區塊變成左右滑動，並加上柔和的滾動效果 */
+div[data-testid="stHorizontalBlock"] {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    padding: 20px 5px !important;
+    gap: 20px !important;
+    scroll-behavior: smooth;
+}
 
-# 2. 建立側邊欄導覽選單
+/* 2. 限制每一個欄位 (卡片) 的寬度與卡片外觀 */
+div[data-testid="stHorizontalBlock"] > div {
+    min-width: 220px !important;
+    max-width: 220px !important;
+    flex-shrink: 0 !important;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 20px 15px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+
+/* 3. 當滑鼠懸停在整張卡片上時的動態效果 */
+div[data-testid="stHorizontalBlock"] > div:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* 4. 將原生按鈕改造成「透明滿版按鈕」，覆蓋在卡片內部，實現點擊頭像/文字皆能觸發 */
+div[data-testid="stHorizontalBlock"] button {
+    background-color: transparent !important;
+    border: none !important;
+    color: inherit !important;
+    padding: 0 !important;
+    width: 100% !important;
+    height: auto !important;
+    box-shadow: none !important;
+    transition: none !important;
+}
+
+div[data-testid="stHorizontalBlock"] button:hover {
+    background-color: transparent !important;
+    color: #007bff !important; /* 懸停時名字變藍色提示可點擊 */
+}
+
+/* 5. 幹部頭像美化 */
+.member-avatar {
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 12px;
+    display: block;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    pointer-events: none; /* 讓點擊事件穿透到按鈕上 */
+}
+
+/* 6. 幹部職稱標籤樣式 */
+.role-badge {
+    background-color: #eef5ff;
+    color: #007bff;
+    font-size: 13px;
+    font-weight: bold;
+    padding: 4px 12px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-bottom: 8px;
+    pointer-events: none;
+}
+
+/* 7. 提示點擊的覆蓋小字 */
+.click-hint {
+    font-size: 11px;
+    color: #a0aec0;
+    margin-top: 5px;
+    pointer-events: none;
+}
+
+/* 8. 滾動條美化 */
+div[data-testid="stHorizontalBlock"]::-webkit-scrollbar {
+    height: 8px;
+}
+div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 10px;
+}
+div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 10px;
+}
+div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+</style>
+""", unsafe_allow_html=True)
+
+# 3. 建立側邊欄導覽選單
 st.sidebar.title("🧭 網站導覽")
 page = st.sidebar.radio("請選擇頁面：", ["首頁介紹", "成員介紹", "聯絡我們"])
 
-# 成員資料
+# 合併重複後的幹部資料（使用更穩定的 GitHub Avatars 作為頭像來源，解決無法顯示的問題）
 members = [
-    {"id": "0", "role": "社長", "name": "陳平安", "img": "https://i.pravatar.cc/220?u=chenpingan", "email": "chenpingan@email.com", "specialty": "程式架構、系統設計", "intro": "熱愛開源專案，擅長 Python 和 Web 開發。"},
-    {"id": "1", "role": "副社", "name": "李尚瑾", "img": "https://i.pravatar.cc/220?u=leeshangjin", "email": "leeshangjin@email.com", "specialty": "AI 應用、數據分析", "intro": "對機器學習充滿熱情，喜歡用程式解決實際問題。"},
-    {"id": "2", "role": "公關", "name": "魏敘百", "img": "https://i.pravatar.cc/220?u=weisubai", "email": "weisubai@email.com", "specialty": "溝通協調、活動策劃", "intro": "負責社團對外關係，是社團的橋樑。"},
-    {"id": "3", "role": "活動", "name": "張承緒", "img": "https://i.pravatar.cc/220?u=zhangchengxu", "email": "zhangchengxu@email.com", "specialty": "活動企劃、時間管理", "intro": "確保每場活動順暢進行，細心負責。"},
-    {"id": "4", "role": "活動", "name": "曾開元", "img": "https://i.pravatar.cc/220?u=zengkaiyuan", "email": "zengkaiyuan@email.com", "specialty": "活動執行、現場管理", "intro": "活動現場的靈魂人物，確保一切完美。"},
-    {"id": "5", "role": "美宣", "name": "倪宇廷", "img": "https://i.pravatar.cc/220?u=niyuting", "email": "niyuting@email.com", "specialty": "平面設計、視覺創意", "intro": "用創意設計傳遞社團的品牌形象。"},
-    {"id": "6", "role": "設備", "name": "陳庭弘", "img": "https://i.pravatar.cc/220?u=chentinghong", "email": "chentinghong@email.com", "specialty": "硬體維護、技術支援", "intro": "負責社團設備和技術基礎設施。"},
-    {"id": "7", "role": "文書", "name": "黃于恩", "img": "https://i.pravatar.cc/220?u=huangyuen", "email": "huangyuen@email.com", "specialty": "文檔整理、紀錄管理", "intro": "記錄社團發展歷程，保管重要文檔。"},
-    {"id": "8", "role": "教學", "name": "蘇奕全", "img": "https://i.pravatar.cc/220?u=suyichuan", "email": "suyichuan@email.com", "specialty": "Python 基礎、演算法", "intro": "擅長用簡單方式講解複雜概念。"},
-    {"id": "9", "role": "教學", "name": "陳平安二", "img": "https://i.pravatar.cc/220?u=chenpingan2", "email": "chenpingan2@email.com", "specialty": "網路爬蟲、資料處理", "intro": "帶領大家進入數據的世界。"},
-    {"id": "10", "role": "教學", "name": "李尚瑾二", "img": "https://i.pravatar.cc/220?u=leeshangjin2", "email": "leeshangjin2@email.com", "specialty": "AI 應用、專案實戰", "intro": "用實際案例展示 AI 的力量。"},
-    {"id": "11", "role": "總務", "name": "曾開元二", "img": "https://i.pravatar.cc/220?u=zengkaiyuan2", "email": "zengkaiyuan2@email.com", "specialty": "財務管理、資源規劃", "intro": "確保社團資源合理分配和運用。"},
+    {
+        "id": "0", 
+        "role": "社長 兼 教學", 
+        "name": "陳平安", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", 
+        "email": "chenpingan@email.com", 
+        "specialty": "程式架構、系統設計、網路爬蟲、資料處理", 
+        "intro": "熱愛開源專案，擅長 Python 和 Web 開發，帶領大家進入數據的世界。"
+    },
+    {
+        "id": "1", 
+        "role": "副社 兼 教學", 
+        "name": "李尚瑾", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin", 
+        "email": "leeshangjin@email.com", 
+        "specialty": "AI 應用、數據分析、專案實戰", 
+        "intro": "對機器學習充滿熱情，喜歡用程式解決實際問題，用實際案例展示 AI 的力量。"
+    },
+    {
+        "id": "2", 
+        "role": "公關", 
+        "name": "魏敘百", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=weisubai", 
+        "email": "weisubai@email.com", 
+        "specialty": "溝通協調、活動策劃", 
+        "intro": "負責社團對外關係，是社團最溫暖的橋樑。"
+    },
+    {
+        "id": "3", 
+        "role": "活動", 
+        "name": "張承緒", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zhangchengxu", 
+        "email": "zhangchengxu@email.com", 
+        "specialty": "活動企劃、時間管理", 
+        "intro": "確保每場活動順暢進行，細心負責是我的代名詞。"
+    },
+    {
+        "id": "4", 
+        "role": "活動 兼 總務", 
+        "name": "曾開元", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zengkaiyuan", 
+        "email": "zengkaiyuan@email.com", 
+        "specialty": "活動執行、現場管理、財務管理、資源規劃", 
+        "intro": "活動現場的靈魂人物，並確保社團資源能得到最合理、最完美的分配。"
+    },
+    {
+        "id": "5", 
+        "role": "美宣", 
+        "name": "倪宇廷", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=niyuting", 
+        "email": "niyuting@email.com", 
+        "specialty": "平面設計、視覺創意", 
+        "intro": "用創意與美感設計，傳遞中崙資研最鮮明的品牌形象。"
+    },
+    {
+        "id": "6", 
+        "role": "設備", 
+        "name": "陳庭弘", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chentinghong", 
+        "email": "chentinghong@email.com", 
+        "specialty": "硬體維護、技術支援", 
+        "intro": "默默守護大後方的設備狂熱者，負責社團所有的硬體與技術基礎建設。"
+    },
+    {
+        "id": "7", 
+        "role": "文書", 
+        "name": "黃于恩", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=huangyuen", 
+        "email": "huangyuen@email.com", 
+        "specialty": "文檔整理、紀錄管理", 
+        "intro": "細心記錄社團的發展歷程，保管所有珍貴的活動回憶與重要文檔。"
+    },
+    {
+        "id": "8", 
+        "role": "教學", 
+        "name": "蘇奕全", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=suyichuan", 
+        "email": "suyichuan@email.com", 
+        "specialty": "Python 基礎、演算法", 
+        "intro": "教學風格幽默風趣，擅長用最簡單好懂的概念講解複雜的演算法。"
+    }
 ]
 
 # 3. 根據使用者點選的頁面，顯示不同的內容
@@ -45,7 +210,11 @@ if page == "首頁介紹":
 elif page == "成員介紹":
     st.title("🧑‍🤝‍🧑 成員介紹")
 
-    # 檢查是否已選擇成員
+    # 初始化追蹤變數
+    if "selected_member" not in st.session_state:
+        st.session_state.selected_member = None
+
+    # 如果有被點擊的成員，進入「詳細頁面」
     if st.session_state.selected_member is not None:
         member = st.session_state.selected_member
         
@@ -59,222 +228,39 @@ elif page == "成員介紹":
         # 個人詳細資訊頁面
         col1, col2 = st.columns([1, 2])
         with col1:
-            st.image(member['img'], width=220)
+            st.markdown(f'<img src="{member["img"]}" class="member-avatar" style="width:200px; height:200px; margin:0;">', unsafe_allow_html=True)
         
         with col2:
             st.markdown(f"## {member['name']}")
-            st.markdown(f"### {member['role']}")
+            st.markdown(f'<span class="role-badge" style="font-size: 15px;">{member["role"]}</span>', unsafe_allow_html=True)
             st.markdown("---")
             st.markdown(f"**📧 Email：** {member['email']}")
             st.markdown(f"**🎯 專長：** {member['specialty']}")
             st.markdown(f"**📝 簡介：** {member['intro']}")
             
     else:
-        # 顯示成員列表
-        st.write("💡 左右滑動瀏覽幹部，**點擊頭像**可查看詳細個人資訊！")
+        # 顯示成員列表（滑動狀態）
+        st.write("💡 **左右滑動** 瀏覽幹部，**點擊任何一張幹部頭像/卡片**即可查看個人詳細資訊！")
         
-        # 1. 建立一個隱藏的 Streamlit 選擇框 (selectbox)，用作 iframe 與 Python 溝通的橋樑
-        # 當 selectbox 的值被 JS 改變時，會自動觸發 Streamlit 的 rerun 並設定 selected_member
-        all_member_names = ["--請選擇--"] + [m["name"] for m in members]
+        # 建立與成員數量相同的 columns (利用 CSS 保持在同一行並產生滾動條)
+        cols = st.columns(len(members))
         
-        # 建立一個容器，並在 CSS 中將其隱藏，使用者看不到它
-        with st.container():
-            st.markdown("<div class='hidden-widget'>", unsafe_allow_html=True)
-            selected_name = st.selectbox(
-                "隱藏的選單", 
-                all_member_names, 
-                key="hidden_member_select",
-                label_visibility="collapsed"
-            )
-            st.markdown("</div>", unsafe_allow_html=True)
-            
-        # 如果使用者透過 JS 改變了 selectbox 的值，進行跳轉
-        if selected_name != "--請選擇--":
-            clicked_member = next((m for m in members if m["name"] == selected_name), None)
-            if clicked_member:
-                st.session_state.selected_member = clicked_member
-                # 重設 selectbox 狀態避免卡死在詳細頁
-                st.session_state.hidden_member_select = "--請選擇--"
-                st.rerun()
-
-        # 2. 建立 HTML 滾動元件
-        card_html_templates = []
-        for member in members:
-            # 點擊頭像時，觸發父視窗中隱藏 selectbox 的值改變事件
-            card_html = f"""
-            <div class="member-card" onclick="selectMember('{member['name']}')">
-                <div class="img-container">
-                    <img src="{member['img']}" alt="{member['name']}">
-                    <div class="hover-overlay">點擊查看</div>
-                </div>
-                <h4>{member['name']}</h4>
-                <p class="role">{member['role']}</p>
-            </div>
-            """
-            card_html_templates.append(card_html)
-            
-        all_cards_html = "\n".join(card_html_templates)
-
-        # 完整的 HTML + CSS + JS 元件
-        scroll_component_html = f"""
-        <style>
-        .member-scroll {{
-            display: flex;
-            gap: 20px;
-            overflow-x: auto;
-            padding: 20px 10px;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-        }}
-        .member-card {{
-            min-width: 200px;
-            max-width: 200px;
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            text-align: center;
-            flex-shrink: 0;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            cursor: pointer;
-        }}
-        .member-card:hover {{
-            transform: translateY(-5px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-        }}
-        .img-container {{
-            position: relative;
-            width: 120px;
-            height: 120px;
-            margin: 0 auto 12px;
-            border-radius: 50%;
-            overflow: hidden;
-        }}
-        .img-container img {{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: scale 0.3s ease;
-        }}
-        .hover-overlay {{
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }}
-        .img-container:hover .hover-overlay {{
-            opacity: 1;
-        }}
-        .img-container:hover img {{
-            scale: 1.1;
-        }}
-        .member-card h4 {{
-            margin: 10px 0 5px;
-            font-size: 18px;
-            font-family: sans-serif;
-            color: #333;
-        }}
-        .member-card p.role {{
-            margin: 0;
-            font-size: 14px;
-            color: #007bff;
-            font-weight: bold;
-            background: #eef5ff;
-            padding: 4px 12px;
-            border-radius: 20px;
-            display: inline-block;
-        }}
-        /* 滾動條美化 */
-        .member-scroll::-webkit-scrollbar {{
-            height: 8px;
-        }}
-        .member-scroll::-webkit-scrollbar-track {{
-            background: #f1f1f1;
-            border-radius: 10px;
-        }}
-        .member-scroll::-webkit-scrollbar-thumb {{
-            background: #c1c1c1;
-            border-radius: 10px;
-        }}
-        .member-scroll::-webkit-scrollbar-thumb:hover {{
-            background: #a8a8a8;
-        }}
-        </style>
-
-        <div class="member-scroll">
-            {all_cards_html}
-        </div>
-
-        <script>
-        function selectMember(memberName) {{
-            // 透過 window.parent 找到父視窗中 Streamlit 的 selectbox 元素
-            const parentDoc = window.parent.document;
-            
-            // 尋找 Streamlit selectbox 的輸入框
-            const selectEl = parentDoc.querySelector('div[data-testid="stSelectbox"] input');
-            
-            if (selectEl) {{
-                // 模擬使用者點擊、輸入成員名字、並按下 Enter 鍵
-                selectEl.focus();
+        for idx, member in enumerate(members):
+            with cols[idx]:
+                # 利用 HTML 設計卡片的內容結構
+                card_content = f"""
+                <img class="member-avatar" src="{member["img"]}" />
+                <div><span class="role-badge">{member["role"]}</span></div>
+                <div style="font-size: 18px; font-weight: bold; margin-bottom: 2px;">{member["name"]}</div>
+                <div class="click-hint">🔍 點擊查看個人頁面</div>
+                """
                 
-                // 為了安全與穩定地在 React 元件中觸發 onChange 事件
-                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
-                nativeInputValueSetter.call(selectEl, memberName);
-                
-                // 觸發 React 輸入事件
-                const inputEvent = new Event('input', {{ bubbles: true }});
-                selectEl.dispatchEvent(inputEvent);
-                
-                // 模擬按下 Enter 完成選擇
-                const keydownEvent = new KeyboardEvent('keydown', {{
-                    key: 'Enter',
-                    keyCode: 13,
-                    code: 'Enter',
-                    which: 13,
-                    bubbles: true
-                }});
-                selectEl.dispatchEvent(keydownEvent);
-            }}
-        }}
-        </script>
-        """
-        
-        # 3. 用 CSS 隱藏我們放的 selectbox 橋樑（讓畫面維持乾淨）
-        st.markdown("""
-        <style>
-        /* 隱藏 selectbox 的容器，不佔用空間且不顯示 */
-        .hidden-widget {
-            display: none !important;
-            height: 0px !important;
-            overflow: hidden !important;
-        }
-        </style>
-        """, unsafe_allow_html=True)
-        
-        # 渲染滾動元件
-        components.html(scroll_component_html, height=340, scrolling=False)
+                # 將整段美化的 HTML 當成「按鈕文字」丟給 st.button 渲染！
+                # 這樣一來，整張卡片（包含頭像與文字）就成為一個大按鈕，點擊任何地方都會觸發 Python 事件！
+                if st.button(card_content, key=f"btn_{member['id']}", use_container_width=True):
+                    st.session_state.selected_member = member
+                    st.rerun()
 
 elif page == "聯絡我們":
     st.title("📬 聯絡社團幹部")
-    st.write("有任何加入社團、合作或課程問題，請填寫表單：")
-    
-    with st.form("my_form"):
-        name = st.text_input("你的稱呼：")
-        class_num = st.text_input("班級 / 學號：")
-        msg = st.text_area("你想問的問題或回饋：")
-        
-        submit_button = st.form_submit_button(label="送出表單")
-        
-        if submit_button:
-            st.success(f"🎉 收到！謝謝 {name} 的留言，教學或網管學長會盡快回覆你！")
+    st.
