@@ -96,10 +96,11 @@ elif page == "成員介紹":
     html, body { margin: 0; padding: 0; }
     .member-scroll {
         display: flex;
-        justify-content: center;
+        justify-content: flex-start;
         gap: 16px;
         overflow-x: auto;
-        padding: 16px 0;
+        padding: 16px 48px;
+        scroll-snap-type: x mandatory;
     }
     .member-card {
         min-width: 240px;
@@ -111,6 +112,8 @@ elif page == "成員介紹":
         padding: 16px;
         text-align: center;
         flex-shrink: 0;
+        scroll-snap-align: start;
+        margin-right: 8px;
     }
     .member-card img {
         width: 120px;
