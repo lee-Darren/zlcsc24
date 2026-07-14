@@ -17,7 +17,7 @@ div[data-testid="stHorizontalBlock"] {
     align-items: stretch !important;
 }
 
-/* 2. 定義每一張卡片的寬度與外觀，並設為相對定位 (relative) 以便按鈕撐滿 */
+/* 2. 定義每一張卡片的寬度與外觀，並設為相對定位 */
 div[data-testid="stHorizontalBlock"] > div {
     min-width: 210px !important;
     max-width: 210px !important;
@@ -25,15 +25,14 @@ div[data-testid="stHorizontalBlock"] > div {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 20px 15px;
+    padding: 20px 15px 25px 15px !important; /* 增加底部 padding，防止名字被擠壓切掉 */
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important; 
-    justify-content: space-between !important;
-    position: relative !important; /* 核心：讓子元素按鈕以此為基準進行絕對定位 */
-    cursor: pointer;
+    justify-content: flex-start !important; /* 改為從上到下排列 */
+    position: relative !important;
 }
 
 /* 3. 滑鼠懸停卡片時的陰影與上浮效果 */
@@ -42,14 +41,13 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 4. 自訂頭像外層包裝容器，強制 100% 寬度並水平置中 */
+/* 4. 自訂頭像外層包裝容器 */
 .avatar-container {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     width: 100% !important;
     margin: 0 auto 10px auto !important;
-    pointer-events: none; /* 防止圖片阻擋點擊事件 */
 }
 
 /* 5. 圓形頭像樣式 */
@@ -66,9 +64,8 @@ div[data-testid="stHorizontalBlock"] > div:hover {
 .role-badge-container {
     width: 100%;
     text-align: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
-    pointer-events: none; /* 防止標籤阻擋點擊事件 */
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 .role-badge {
     background-color: #eef5ff;
@@ -80,36 +77,40 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     display: inline-block;
 }
 
-/* 7. 美化按鈕，並使用絕對定位將其熱區「撐滿整張卡片」 */
+/* 7. 名字樣式（獨立出來，確保完全不會被切掉） */
+.member-name-text {
+    font-size: 16px;
+    font-weight: bold;
+    color: #334155;
+    margin-top: 10px;
+    text-align: center;
+}
+
+/* 8. 【關鍵修正】把 Streamlit 按鈕做成「透明的面罩」覆蓋在整張卡片正上方 */
+div[data-testid="stHorizontalBlock"] div[data-testid="element-container"] {
+    position: static !important; /* 釋放 Streamlit 容器限制 */
+}
+
 div[data-testid="stHorizontalBlock"] button {
     position: absolute !important;
     top: 0 !important;
     left: 0 !important;
     width: 100% !important;
     height: 100% !important;
-    margin: 0 !important;
-    border-radius: 16px !important; /* 對齊外層卡片圓角 */
-    background-color: transparent !important; /* 平常完全透明，露出底下的頭像與職稱 */
+    background-color: transparent !important; /* 完全透明，只用來接收點擊 */
     border: none !important;
-    color: #007bff !important;
-    font-weight: bold !important;
-    font-size: 14px !important;
-    transition: all 0.2s ease !important;
-    
-    /* 讓按鈕的文字垂直對齊至最底部，不遮擋頭像 */
-    display: flex !important;
-    align-items: flex-end !important;
-    justify-content: center !important;
-    padding-bottom: 15px !important;
+    color: transparent !important; /* 把按鈕原本的文字隱形 */
+    box-shadow: none !important;
+    cursor: pointer !important;
+    z-index: 10 !important; /* 確保它在最上層，100% 能被點到 */
 }
 
-/* 當滑鼠滑入卡片時，按鈕文字與背景的微調效果（可保有原本的按鈕懸停感） */
-div[data-testid="stHorizontalBlock"] button:hover {
-    background-color: rgba(0, 123, 255, 0.05) !important; /* 輕微藍色遮罩 */
-    color: #0056b3 !important;
+/* 當滑鼠移入卡片時，給一個微透的點擊回饋感 */
+div[data-testid="stHorizontalBlock"] > div:hover button {
+    background-color: rgba(0, 123, 255, 0.02) !important; 
 }
 
-/* 8. 滾動條美化 */
+/* 9. 滾動條美化 */
 div[data-testid="stHorizontalBlock"]::-webkit-scrollbar {
     height: 8px;
 }
@@ -281,8 +282,12 @@ elif page == "成員介紹":
                 # B. 顯示職稱
                 st.markdown(f'<div class="role-badge-container"><span class="role-badge">{member["role"]}</span></div>', unsafe_allow_html=True)
                 
-                # C. 點擊按鈕（已透過 CSS 將其隱性撐滿整張卡片，點擊卡片任何地方皆可點到此按鈕）
-                if st.button(member['name'], key=f"btn_{member['id']}", use_container_width=True):
+                # C. 顯示名字（使用純 HTML 確保名字絕對在卡片內、置中且不會被擠壓切掉）
+                st.markdown(f'<div class="member-name-text">{member["name"]}</div>', unsafe_allow_html=True)
+                
+                # D. 透明點擊重疊按鈕（這個按鈕沒有文字，但會透過 CSS 撐滿卡片、置於最上層）
+                # 點擊任何地方都會觸發此按鈕
+                if st.button("", key=f"btn_{member['id']}", use_container_width=True):
                     st.session_state.selected_member = member
                     st.rerun()
 
