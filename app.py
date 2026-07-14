@@ -293,7 +293,7 @@ elif page == "成員介紹":
             
     # 2. 顯示「左右滾動卡片列表」
     else:
-        st.write("💡 點擊卡片內**任何地方**（包含照片、名字、背景）即可查看個人詳細資訊！")
+        st.write("點擊各成員下方按鈕可以查看相關詳細介紹")
         
         # 建立與成員數量相同的 columns
         cols = st.columns(len(members))
