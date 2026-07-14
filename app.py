@@ -147,4 +147,134 @@ elif page == "成員介紹":
             position: relative;
             width: 120px;
             height: 120px;
-            margin: 0 auto 12
+            margin: 0 auto 12px;
+            border-radius: 50%;
+            overflow: hidden;
+        }}
+        .img-container img {{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: scale 0.3s ease;
+        }}
+        .hover-overlay {{
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }}
+        .img-container:hover .hover-overlay {{
+            opacity: 1;
+        }}
+        .img-container:hover img {{
+            scale: 1.1;
+        }}
+        .member-card h4 {{
+            margin: 10px 0 5px;
+            font-size: 18px;
+            font-family: sans-serif;
+            color: #333;
+        }}
+        .member-card p.role {{
+            margin: 0;
+            font-size: 14px;
+            color: #007bff;
+            font-weight: bold;
+            background: #eef5ff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: inline-block;
+        }}
+        /* 滾動條美化 */
+        .member-scroll::-webkit-scrollbar {{
+            height: 8px;
+        }}
+        .member-scroll::-webkit-scrollbar-track {{
+            background: #f1f1f1;
+            border-radius: 10px;
+        }}
+        .member-scroll::-webkit-scrollbar-thumb {{
+            background: #c1c1c1;
+            border-radius: 10px;
+        }}
+        .member-scroll::-webkit-scrollbar-thumb:hover {{
+            background: #a8a8a8;
+        }}
+        </style>
+
+        <div class="member-scroll">
+            {all_cards_html}
+        </div>
+
+        <script>
+        function selectMember(memberName) {{
+            // 透過 window.parent 找到父視窗中 Streamlit 的 selectbox 元素
+            const parentDoc = window.parent.document;
+            
+            // 尋找 Streamlit selectbox 的輸入框
+            const selectEl = parentDoc.querySelector('div[data-testid="stSelectbox"] input');
+            
+            if (selectEl) {{
+                // 模擬使用者點擊、輸入成員名字、並按下 Enter 鍵
+                selectEl.focus();
+                
+                // 為了安全與穩定地在 React 元件中觸發 onChange 事件
+                const nativeInputValueSetter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, "value").set;
+                nativeInputValueSetter.call(selectEl, memberName);
+                
+                // 觸發 React 輸入事件
+                const inputEvent = new Event('input', {{ bubbles: true }});
+                selectEl.dispatchEvent(inputEvent);
+                
+                // 模擬按下 Enter 完成選擇
+                const keydownEvent = new KeyboardEvent('keydown', {{
+                    key: 'Enter',
+                    keyCode: 13,
+                    code: 'Enter',
+                    which: 13,
+                    bubbles: true
+                }});
+                selectEl.dispatchEvent(keydownEvent);
+            }}
+        }}
+        </script>
+        """
+        
+        # 3. 用 CSS 隱藏我們放的 selectbox 橋樑（讓畫面維持乾淨）
+        st.markdown("""
+        <style>
+        /* 隱藏 selectbox 的容器，不佔用空間且不顯示 */
+        .hidden-widget {
+            display: none !important;
+            height: 0px !important;
+            overflow: hidden !important;
+        }
+        </style>
+        """, unsafe_allow_html=True)
+        
+        # 渲染滾動元件
+        components.html(scroll_component_html, height=340, scrolling=False)
+
+elif page == "聯絡我們":
+    st.title("📬 聯絡社團幹部")
+    st.write("有任何加入社團、合作或課程問題，請填寫表單：")
+    
+    with st.form("my_form"):
+        name = st.text_input("你的稱呼：")
+        class_num = st.text_input("班級 / 學號：")
+        msg = st.text_area("你想問的問題或回饋：")
+        
+        submit_button = st.form_submit_button(label="送出表單")
+        
+        if submit_button:
+            st.success(f"🎉 收到！謝謝 {name} 的留言，教學或網管學長會盡快回覆你！")
