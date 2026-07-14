@@ -3,35 +3,46 @@ import streamlit as st
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
 
-# 2. 注入極致置中的 CSS 樣式
+# 2. 注入極致置中與完美等距對齊的 CSS
 st.markdown("""
 <style>
-/* 1. 強制讓 columns 橫向排列不換行，並產生滾動條 */
+/* 1. 讓整組卡片容器在網頁正中央水平置中，並保留流暢的左右滑動 */
 div[data-testid="stHorizontalBlock"] {
     display: flex !important;
     flex-wrap: nowrap !important;
     overflow-x: auto !important;
-    padding: 15px 5px !important;
-    gap: 15px !important;
+    padding: 20px 0px !important;
+    gap: 20px !important;
     scroll-behavior: smooth;
     align-items: stretch !important;
+    justify-content: center !important; /* 核心：當卡片不夠多時，整組卡片在畫面正中間對齊 */
 }
 
-/* 2. 定義每一張卡片的寬度與外觀 */
+/* 如果卡片數量多到超出螢幕，自動將對齊方式改為靠左滑動，防止第一張卡片被切掉 */
+@media (max-width: 1200px) {
+    div[data-testid="stHorizontalBlock"] {
+        justify-content: flex-start !important;
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+}
+
+/* 2. 定義每一張成員卡片的寬度與外觀，並確保內部所有內容完美置中 */
 div[data-testid="stHorizontalBlock"] > div {
-    min-width: 210px !important;
-    max-width: 210px !important;
+    min-width: 220px !important;
+    max-width: 220px !important;
     flex-shrink: 0 !important;
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 20px 15px;
+    padding: 24px 16px !important;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex !important;
     flex-direction: column !important;
-    align-items: center !important; /* 確保內件水平置中 */
+    align-items: center !important; /* 卡片內部所有項目水平置中 */
     justify-content: space-between !important;
+    box-sizing: border-box !important;
 }
 
 /* 3. 滑鼠懸停卡片時的陰影與上浮效果 */
@@ -40,7 +51,7 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 4. 【核心修正】強力強制 Streamlit 的圖片容器在欄位中水平置中 */
+/* 4. 強制 Streamlit 圖片容器在欄位中絕對水平置中 */
 div[data-testid="stHorizontalBlock"] div[data-testid="element-container"],
 div[data-testid="stHorizontalBlock"] div[data-testid="stImageFilterTarget"],
 div[data-testid="stHorizontalBlock"] div[data-testid="stImage"] {
@@ -51,13 +62,13 @@ div[data-testid="stHorizontalBlock"] div[data-testid="stImage"] {
     margin: 0 auto !important;
 }
 
-/* 5. 圓形頭像樣式 */
+/* 5. 圓形頭像樣式（確保在正中間） */
 div[data-testid="stHorizontalBlock"] img {
     width: 110px !important;
     height: 110px !important;
     border-radius: 50% !important;
     object-fit: cover !important;
-    margin: 0 auto !important; /* 強制圖片本身置中 */
+    margin: 0 auto !important; /* 強制圖片自身置中 */
     display: block !important;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
 }
@@ -66,20 +77,20 @@ div[data-testid="stHorizontalBlock"] img {
 .role-badge-container {
     width: 100%;
     text-align: center;
-    margin-top: 10px;
-    margin-bottom: 10px;
+    margin-top: 12px;
+    margin-bottom: 12px;
 }
 .role-badge {
     background-color: #eef5ff;
     color: #007bff;
     font-size: 13px;
     font-weight: bold;
-    padding: 4px 12px;
+    padding: 4px 14px;
     border-radius: 20px;
     display: inline-block;
 }
 
-/* 7. 美化卡片下方的 Streamlit 原生按鈕 */
+/* 7. 美化卡片下方的 Streamlit 原生姓名按鈕 */
 div[data-testid="stHorizontalBlock"] button {
     border-radius: 20px !important;
     background-color: #f8fafc !important;
@@ -89,6 +100,8 @@ div[data-testid="stHorizontalBlock"] button {
     font-size: 14px !important;
     transition: all 0.2s ease !important;
     width: 100% !important;
+    display: block !important;
+    margin: 0 auto !important;
 }
 
 div[data-testid="stHorizontalBlock"] button:hover {
@@ -253,12 +266,12 @@ elif page == "成員介紹":
     else:
         st.write("💡 **左右滑動** 瀏覽幹部，點擊下方姓名即可查看個人詳細資訊！")
         
-        # 建立與成員數量相同的 columns（CSS 會防止換行並自動加上橫向捲軸）
+        # 建立與成員數量相同的 columns
         cols = st.columns(len(members))
         
         for idx, member in enumerate(members):
             with cols[idx]:
-                # A. 顯示頭像（全新修正的 CSS 會徹底將其置中）
+                # A. 顯示頭像（透過 CSS 強制將元件內部的多層 div 與 img 徹底置中）
                 st.image(member["img"], use_column_width=False)
                 
                 # B. 顯示職稱
