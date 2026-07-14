@@ -87,10 +87,6 @@ elif page == "成員介紹":
         {"role": "總務", "name": "曾開元", "img": "https://i.pravatar.cc/220?u=zengkaiyuan2", "email": "zengkaiyuan2@email.com", "specialty": "財務管理、資源規劃", "intro": "確保社團資源合理分配和運用。"},
     ]
 
-    # 初始化 Session State
-    if "selected_member_name" not in st.session_state:
-        st.session_state.selected_member_name = None
-
     # 建立可點擊的成員卡片 HTML
     cards_html = """
     <style>
@@ -154,13 +150,11 @@ elif page == "成員介紹":
     
     for idx, member in enumerate(members):
         cards_html += f"""
-        <button style="all: unset; cursor: pointer;" onclick="window.parent.postMessage({{type: 'member_select', name: '{member['name']}'}}, '*')">
-            <div class='member-card'>
-                <img src='{member['img']}' alt='{member['name']}'>
-                <h4>{member['name']}</h4>
-                <p><strong>{member['role']}</strong></p>
-            </div>
-        </button>
+        <div class='member-card' data-member-index='{idx}'>
+            <img src='{member['img']}' alt='{member['name']}'>
+            <h4>{member['name']}</h4>
+            <p><strong>{member['role']}</strong></p>
+        </div>
         """
     
     cards_html += "</div></div>"
@@ -170,26 +164,34 @@ elif page == "成員介紹":
     st.write("---")
     st.write("💡 點擊幹部頭像查看更多資訊")
     
-    # 使用選擇框顯示詳細資訊
-    member_names = [f"{m['name']} ({m['role']})" for m in members]
-    selected = st.selectbox("選擇要查看的幹部：", [""] + member_names, key="member_selector", label_visibility="collapsed")
+    # 使用 Streamlit 的 columns 和 button 來製作可點擊的卡片
+    cols = st.columns(4)
+    for idx, member in enumerate(members):
+        with cols[idx % 4]:
+            if st.button(f"👤 {member['name']}\n{member['role']}", key=f"member-btn-{idx}", use_container_width=True):
+                st.session_state.selected_member_idx = idx
     
-    if selected and selected != "":
-        # 從選擇的文字中提取名字
-        member_name = selected.split(" (")[0]
-        member = next((m for m in members if m['name'] == member_name), None)
+    # 顯示選中幹部的詳細資訊
+    if "selected_member_idx" in st.session_state:
+        member = members[st.session_state.selected_member_idx]
         
-        if member:
-            st.markdown(f"## {member['name']} - {member['role']}")
-            
-            col1, col2 = st.columns([1, 2])
-            with col1:
-                st.image(member['img'], width=150)
-            
-            with col2:
-                st.markdown(f"**📧 Email:** {member['email']}")
-                st.markdown(f"**🎯 專長:** {member['specialty']}")
-                st.markdown(f"**📝 簡介:** {member['intro']}")
+        st.markdown("---")
+        st.markdown(f"## 📋 {member['name']} 的詳細資訊")
+        
+        col1, col2 = st.columns([1, 2])
+        with col1:
+            st.image(member['img'], width=150)
+        
+        with col2:
+            st.markdown(f"**職位：** {member['role']}")
+            st.markdown(f"**📧 Email：** {member['email']}")
+            st.markdown(f"**🎯 專長：** {member['specialty']}")
+            st.markdown(f"**📝 簡介：** {member['intro']}")
+        
+        if st.button("❌ 關閉詳細資訊", key="close-detail"):
+            if "selected_member_idx" in st.session_state:
+                del st.session_state.selected_member_idx
+            st.rerun()
 
 elif page == "社課講義":
     st.title("📚 歷屆社課資源庫")
