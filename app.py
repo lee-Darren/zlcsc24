@@ -41,16 +41,17 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 4. 自訂頭像外層包裝容器 */
+/* 4. 自訂頭像外層包裝容器（加上 pointer-events: none 確保點擊穿透） */
 .avatar-container {
     display: flex !important;
     justify-content: center !important;
     align-items: center !important;
     width: 100% !important;
     margin: 0 auto 10px auto !important;
+    pointer-events: none !important; /* 讓點擊穿透到按鈕上 */
 }
 
-/* 5. 圓形頭像樣式 */
+/* 5. 圓形頭像樣式（加上 pointer-events: none 確保點擊穿透） */
 .custom-circle-avatar {
     width: 110px !important;
     height: 110px !important;
@@ -58,14 +59,16 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     object-fit: cover !important;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
     display: block !important;
+    pointer-events: none !important; /* 讓點擊穿透到按鈕上 */
 }
 
-/* 6. 職稱標籤樣式 */
+/* 6. 職稱標籤樣式（加上 pointer-events: none 確保點擊穿透） */
 .role-badge-container {
     width: 100%;
     text-align: center;
     margin-top: 5px;
     margin-bottom: 5px;
+    pointer-events: none !important; /* 讓點擊穿透到按鈕上 */
 }
 .role-badge {
     background-color: #eef5ff;
@@ -75,18 +78,20 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     padding: 4px 12px;
     border-radius: 20px;
     display: inline-block;
+    pointer-events: none !important;
 }
 
-/* 7. 名字樣式（獨立出來，確保完全不會被切掉） */
+/* 7. 名字樣式（加上 pointer-events: none 確保點擊穿透） */
 .member-name-text {
     font-size: 16px;
     font-weight: bold;
     color: #334155;
     margin-top: 10px;
     text-align: center;
+    pointer-events: none !important; /* 讓點擊穿透到按鈕上 */
 }
 
-/* 8. 【關鍵修正】把 Streamlit 按鈕做成「透明的面罩」覆蓋在整張卡片正上方 */
+/* 8. 把 Streamlit 按鈕做成「透明的面罩」覆蓋在整張卡片正上方 */
 div[data-testid="stHorizontalBlock"] div[data-testid="element-container"] {
     position: static !important; /* 釋放 Streamlit 容器限制 */
 }
@@ -102,7 +107,7 @@ div[data-testid="stHorizontalBlock"] button {
     color: transparent !important; /* 把按鈕原本的文字隱形 */
     box-shadow: none !important;
     cursor: pointer !important;
-    z-index: 10 !important; /* 確保它在最上層，100% 能被點到 */
+    z-index: 99 !important; /* 提高層級，確保它在最上層 */
 }
 
 /* 當滑鼠移入卡片時，給一個微透的點擊回饋感 */
@@ -285,8 +290,7 @@ elif page == "成員介紹":
                 # C. 顯示名字（使用純 HTML 確保名字絕對在卡片內、置中且不會被擠壓切掉）
                 st.markdown(f'<div class="member-name-text">{member["name"]}</div>', unsafe_allow_html=True)
                 
-                # D. 透明點擊重疊按鈕（這個按鈕沒有文字，但會透過 CSS 撐滿卡片、置於最上層）
-                # 點擊任何地方都會觸發此按鈕
+                # D. 透明點擊重疊按鈕（現在點擊頭像照片、職稱、名字、卡片任何地方都會完美穿透並觸發此按鈕！）
                 if st.button("", key=f"btn_{member['id']}", use_container_width=True):
                     st.session_state.selected_member = member
                     st.rerun()
