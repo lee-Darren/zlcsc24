@@ -60,7 +60,7 @@ page = st.sidebar.radio("請選擇頁面：", ["首頁介紹", "成員介紹", "
 # 3. 根據使用者點選的頁面，顯示不同的內容
 if page == "首頁介紹":
     st.title("歡迎來到中崙資研")
-    st.subheader("用程式碼敲開未來的門，用熱血寫下我們的青春")
+    st.subheader("這裡是最適合你的資訊研究社")
     
     # 放一張示範科技圖（使用 Unsplash 的可直接顯示圖片連結）
     st.image("https://raw.githubusercontent.com/lee-Darren/zlcsc24/main/1784017363261.jpg", width=700)
