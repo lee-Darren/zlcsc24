@@ -93,6 +93,7 @@ elif page == "成員介紹":
 
     cards_html = """
     <style>
+    html, body { margin: 0; padding: 0; }
     .member-scroll {
         display: flex;
         justify-content: center;
@@ -135,6 +136,9 @@ elif page == "成員介紹":
     }
     </style>
 
+    </style>
+
+    <div style='display:flex; justify-content:center;'>
     <div class='member-scroll'>
     """
     for member in members:
@@ -145,7 +149,7 @@ elif page == "成員介紹":
             <p><strong>{member['role']}</strong></p>
         </div>
         """
-    cards_html += "</div>"
+    cards_html += "</div></div>"
 
     components.html(cards_html, height=360, scrolling=True)
     st.write("---")
