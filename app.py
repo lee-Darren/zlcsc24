@@ -5,11 +5,11 @@ st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", l
 
 # 2. 建立側邊欄導覽選單
 st.sidebar.title("🧭 網站導覽")
-page = st.sidebar.radio("請選擇頁面：", ["首頁介紹", "社課講義", "聯絡我們"])
+page = st.sidebar.radio("請選擇頁面：", ["首頁介紹", "成員介紹", "社課講義", "聯絡我們"])
 
 # 3. 根據使用者點選的頁面，顯示不同的內容
 if page == "首頁介紹":
-    st.title("🚀 歡迎來到資訊研究社！")
+    st.title("歡迎來到中崙資研")
     st.subheader("用程式碼敲開未來的門，用熱血寫下我們的青春")
     
     # 放一張示範科技圖（使用 Unsplash 的可直接顯示圖片連結）
@@ -21,6 +21,84 @@ if page == "首頁介紹":
     * **學習內容**：Python 基礎、網路爬蟲、AI 應用、基礎演算法。
     * **社團活動**：技術交流會、專題黑客松、學長姐經驗傳承。
     """)
+
+elif page == "成員介紹":
+    st.title("🧑‍🤝‍🧑 成員介紹")
+    st.write("認識我們的核心社員與幹部，歡迎加入中崙資研社團！")
+
+    members = [
+        {"role": "社長", "name": "陳平安", "img": "https://i.pravatar.cc/220?u=chenpingan"},
+        {"role": "副社", "name": "李尚瑾", "img": "https://i.pravatar.cc/220?u=leeshangjin"},
+        {"role": "公關", "name": "魏敘百", "img": "https://i.pravatar.cc/220?u=weisubai"},
+        {"role": "活動", "name": "張承緒", "img": "https://i.pravatar.cc/220?u=zhangchengxu"},
+        {"role": "活動", "name": "曾開元", "img": "https://i.pravatar.cc/220?u=zengkaiyuan"},
+        {"role": "美宣", "name": "倪宇廷", "img": "https://i.pravatar.cc/220?u=niyuting"},
+        {"role": "設備", "name": "陳庭弘", "img": "https://i.pravatar.cc/220?u=chentinghong"},
+        {"role": "文書", "name": "黃于恩", "img": "https://i.pravatar.cc/220?u=huangyuen"},
+        {"role": "教學", "name": "蘇奕全", "img": "https://i.pravatar.cc/220?u=suyichuan"},
+        {"role": "教學", "name": "陳平安", "img": "https://i.pravatar.cc/220?u=chenpingan2"},
+        {"role": "教學", "name": "李尚瑾", "img": "https://i.pravatar.cc/220?u=leeshangjin2"},
+        {"role": "總務", "name": "曾開元", "img": "https://i.pravatar.cc/220?u=zengkaiyuan2"},
+    ]
+
+    card_style = """
+    <style>
+    .member-scroll {
+        display: flex;
+        overflow-x: auto;
+        padding: 16px 0;
+        gap: 16px;
+    }
+    .member-card {
+        min-width: 240px;
+        max-width: 240px;
+        background: #ffffff;
+        border: 1px solid #e6e6e6;
+        border-radius: 18px;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+        padding: 16px;
+        text-align: center;
+        flex-shrink: 0;
+    }
+    .member-card img {
+        width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 50%;
+        margin-bottom: 12px;
+    }
+    .member-card h4 {
+        margin: 8px 0 4px;
+        font-size: 18px;
+    }
+    .member-card p {
+        margin: 4px 0;
+        color: #333333;
+    }
+    .member-scroll::-webkit-scrollbar {
+        height: 10px;
+    }
+    .member-scroll::-webkit-scrollbar-thumb {
+        background: rgba(0,0,0,0.2);
+        border-radius: 999px;
+    }
+    </style>
+    """
+
+    cards_html = "<div class='member-scroll'>"
+    for member in members:
+        cards_html += f"""
+        <div class='member-card'>
+            <img src='{member['img']}' alt='{member['name']}'>
+            <h4>{member['name']}</h4>
+            <p><strong>{member['role']}</strong></p>
+        </div>
+        """
+    cards_html += "</div>"
+
+    st.markdown(card_style + cards_html, unsafe_allow_html=True)
+    st.write("---")
+    st.write("如果你想要，我也可以幫你把每位社員的專長和聯絡方式補上。")
 
 elif page == "社課講義":
     st.title("📚 歷屆社課資源庫")
