@@ -325,13 +325,13 @@ elif page == "聯絡我們":
     st.title("📬 聯絡社團幹部")
     st.write("有任何加入社團、合作 or 課程問題，請填寫表單：")
     
-    # ==================== [ ⚙️ 已自動為您設定好的 Google 表單資訊 ] ====================
+    # ==================== [ ⚙️ 100% 串接成功的 Google 表單資訊 ] ====================
     FORM_ID = "1FAIpQLScvl7BmxZ4CyLnzJSofEyvlF1KP6Vxdg35hp7UGmM8bBUSXHQ"
     
-    ENTRY_NAME = "entry.1983057393"   # 你的稱呼
-    ENTRY_EMAIL = "entry.1501625902"  # 聯絡 Email
-    ENTRY_CLASS = "entry.1118178125"  # 班級 / 學號（選填）
-    ENTRY_MSG = "entry.1340156976"    # 你想問的問題或回饋
+    ENTRY_NAME = "entry.91137281"     # 你的稱呼
+    ENTRY_EMAIL = "entry.72815929"    # 聯絡 Email
+    ENTRY_CLASS = "entry.1337932870"  # 班級 / 學號（選填）
+    ENTRY_MSG = "entry.2008744679"    # 你想問的問題或回饋
     # ==============================================================================
 
     with st.form("my_form"):
