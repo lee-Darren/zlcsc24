@@ -323,7 +323,7 @@ elif page == "聯絡我們":
     import requests
 
     st.title("📬 聯絡社團幹部")
-    st.write("有任何加入社團、合作 or 課程問題，請填寫表單：")
+    st.write("有任何加入社團、合作 or 課程問題，請填寫以下提問單：")
     
     # ==================== [ ⚙️ 100% 串接成功的 Google 表單資訊 ] ====================
     FORM_ID = "1FAIpQLScvl7BmxZ4CyLnzJSofEyvlF1KP6Vxdg35hp7UGmM8bBUSXHQ"
