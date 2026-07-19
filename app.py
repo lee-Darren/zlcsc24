@@ -101,28 +101,27 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
 
-/* 9. LINE 社群專屬按鈕樣式 (維持最美外觀) */
-.line-community-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #06C755;
+/* 9. 將超連結 <a> 標籤完全偽裝成按鈕的外觀 */
+.line-anchor-btn {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background-color: #06C755 !important;
     color: white !important;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 14px 28px;
-    border-radius: 30px;
-    border: none;
-    box-shadow: 0 4px 12px rgba(6, 199, 85, 0.3);
-    cursor: pointer;
-    transition: all 0.2s;
-    margin: 12px 0;
-    text-decoration: none !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+    padding: 14px 28px !important;
+    border-radius: 30px !important;
+    box-shadow: 0 4px 12px rgba(6, 199, 85, 0.3) !important;
+    text-decoration: none !important; /* 拔掉超連結底線 */
+    transition: all 0.2s !important;
+    margin: 12px 0 !important;
 }
-.line-community-btn:hover {
-    background-color: #05B34C;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(6, 199, 85, 0.4);
+.line-anchor-btn:hover {
+    background-color: #05B34C !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 6px 16px rgba(6, 199, 85, 0.4) !important;
+    color: white !important;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -163,14 +162,15 @@ if page == "首頁介紹":
     st.markdown("---")
     st.markdown("### 💬 有問題想直接問學長姐？")
     
-    # 🌟【絕不失效黑科技】改用 window.top.location.href 直接強制瀏覽器跳轉
-    js_button_1 = f'''
-    <button class="line-community-btn" onclick="window.top.location.href='{LINE_COMMUNITY_URL}'">
+    # 用 HTML 原生連結 <a> 代替按鈕，並加上 target="_parent" 強制在外層網頁（或當前分頁）開啟
+    # 這樣既有方法一的好看按鈕外觀，又擁有方法二的超高相容性！
+    html_link_1 = f'''
+    <a class="line-anchor-btn" href="{LINE_COMMUNITY_URL}" target="_parent">
         🟢 點我加入【中崙資研新生提問群】
-    </button>
+    </a>
     '''
-    st.markdown(js_button_1, unsafe_allow_html=True)
-    st.write("點擊上方按鈕將自動跳轉至 LINE 社群，課程、社團疑惑一秒替你解答！")
+    st.markdown(html_link_1, unsafe_allow_html=True)
+    st.write("點擊上方按鈕將跳轉至 LINE 社群，課程、社團疑惑一秒替你解答！")
 
 elif page == "成員介紹":
     st.title("🧑‍🤝‍🧑 成員介紹")
@@ -229,13 +229,13 @@ elif page == "聯絡我們":
     
     st.info("💡 溫馨提示：如果想要獲得最即時、最快速的回答，建議直接點擊下方按鈕加入我們的 LINE 新生群發問喔！")
     
-    # 🌟【絕不失效黑科技】聯絡我們頁面也同步改為強制覆蓋跳轉
-    js_button_2 = f'''
-    <button class="line-community-btn" onclick="window.top.location.href='{LINE_COMMUNITY_URL}'">
+    # 聯絡我們頁面也同步修正為 <a> 標籤按鈕
+    html_link_2 = f'''
+    <a class="line-anchor-btn" href="{LINE_COMMUNITY_URL}" target="_parent">
         🟢 點我秒入【新生 LINE 提問群】
-    </button>
+    </a>
     '''
-    st.markdown(js_button_2, unsafe_allow_html=True)
+    st.markdown(html_link_2, unsafe_allow_html=True)
     st.markdown("---")
     
     st.write("若您不方便使用 LINE，也可以填寫以下電子提問單，我們會以 Email 回覆您：")
