@@ -101,8 +101,8 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
 
-/* 9. LINE 社群專屬按鈕美化 (全新升級突破版) */
-.line-btn-js {
+/* 9. LINE 社群專屬按鈕樣式 (維持最美外觀) */
+.line-community-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -110,16 +110,16 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
     color: white !important;
     font-weight: bold;
     font-size: 16px;
-    padding: 12px 24px;
+    padding: 14px 28px;
     border-radius: 30px;
     border: none;
     box-shadow: 0 4px 12px rgba(6, 199, 85, 0.3);
     cursor: pointer;
     transition: all 0.2s;
-    margin: 10px 0;
-    text-decoration: none;
+    margin: 12px 0;
+    text-decoration: none !important;
 }
-.line-btn-js:hover {
+.line-community-btn:hover {
     background-color: #05B34C;
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(6, 199, 85, 0.4);
@@ -160,19 +160,17 @@ if page == "首頁介紹":
     * **社團活動**：交流茶會、聯合迎新、聖誕交換禮物、社內程式競賽與成發。
     """)
     
-    # ─── 突破限制：首頁 LINE 按鈕 ───
     st.markdown("---")
     st.markdown("### 💬 有問題想直接問學長姐？")
     
-    # 核心黑科技：利用 window.open(..., '_blank') 或是 window.top.location 繞過 iframe 限制
-    # 這裡使用 window.open 配合頂層調用，可以完美在手機瀏覽器開新分頁跳轉至 LINE 社群，同時維持超美綠色按鈕外觀！
+    # 🌟【絕不失效黑科技】改用 window.top.location.href 直接強制瀏覽器跳轉
     js_button_1 = f'''
-    <button class="line-community-btn" onclick="window.open('{LINE_COMMUNITY_URL}', '_blank')">
+    <button class="line-community-btn" onclick="window.top.location.href='{LINE_COMMUNITY_URL}'">
         🟢 點我加入【中崙資研新生提問群】
     </button>
     '''
     st.markdown(js_button_1, unsafe_allow_html=True)
-    st.write("點擊上方按鈕將自動為您開啟 LINE 社群，課程、社團疑惑一秒替你解答！")
+    st.write("點擊上方按鈕將自動跳轉至 LINE 社群，課程、社團疑惑一秒替你解答！")
 
 elif page == "成員介紹":
     st.title("🧑‍🤝‍🧑 成員介紹")
@@ -231,9 +229,9 @@ elif page == "聯絡我們":
     
     st.info("💡 溫馨提示：如果想要獲得最即時、最快速的回答，建議直接點擊下方按鈕加入我們的 LINE 新生群發問喔！")
     
-    # ─── 突破限制：聯絡我們頁面 LINE 按鈕 ───
+    # 🌟【絕不失效黑科技】聯絡我們頁面也同步改為強制覆蓋跳轉
     js_button_2 = f'''
-    <button class="line-community-btn" onclick="window.open('{LINE_COMMUNITY_URL}', '_blank')">
+    <button class="line-community-btn" onclick="window.top.location.href='{LINE_COMMUNITY_URL}'">
         🟢 點我秒入【新生 LINE 提問群】
     </button>
     '''
