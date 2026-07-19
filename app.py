@@ -3,7 +3,7 @@ import streamlit as st
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
 
-# 2. 注入 CSS 樣式（已移除會擋到連結的高風險透明遮罩設定）
+# 2. 注入 CSS 樣式
 st.markdown("""
 <style>
 /* 1. 強制讓 columns 橫向排列不換行，並產生滾動條 */
@@ -100,6 +100,14 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb {
 div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
+
+/* 9. 全新修復：純網頁層級的超連結文字樣式 */
+.safe-link-text {
+    font-size: 18px !important;
+    font-weight: bold !important;
+    color: #06C755 !important;
+    text-decoration: underline !important;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -110,7 +118,7 @@ page = st.sidebar.radio("請選擇頁面：", ["首頁介紹", "成員介紹", "
 # LINE 社群網址變數
 LINE_COMMUNITY_URL = "https://line.me/ti/g2/UqZ3ywFePcVOcm7rqVRzBfLMXFSFaEMhRLS_rA?utm_source=invitation&utm_medium=link_copy&utm_campaign=default"
 
-# 成員資料
+# 幹部資料保持不變
 members = [
     {"id": "0", "role": "社長 兼 教學", "name": "陳平安", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
     {"id": "1", "role": "副社 兼 教學", "name": "李尚瑾", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
@@ -123,7 +131,6 @@ members = [
     {"id": "8", "role": "教學", "name": "蘇奕全", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=suyichuan", "email": "************@email.com", "specialty": "**********", "intro": "*****************"}
 ]
 
-# 3. 根據使用者點選的頁面，顯示不同的內容
 if page == "首頁介紹":
     st.title("歡迎來到中崙資研")
     st.subheader("這裡是最適合你的資訊研究社")
@@ -137,12 +144,17 @@ if page == "首頁介紹":
     * **社團活動**：交流茶會、聯合迎新、聖誕交換禮物、社內程式競賽與成發。
     """)
     
+    # ─── 終極修正點 1：首頁 LINE 社群安全防線 ───
     st.markdown("---")
     st.markdown("### 💬 有問題想直接問學長姐？")
     
-    # 關鍵修正：改用官方原生 st.link_button，保證防禦所有 CSS 遮擋，100% 可點擊！
-    st.link_button("🟢 點我加入【中崙資研新生提問群】(LINE 社群)", LINE_COMMUNITY_URL, type="primary")
-    st.write("點擊上方按鈕將會開啟新分頁，加入 LINE 社群，課程、社團疑惑一秒替你解答！")
+    # 用標準的 HTML <a> 標籤，並強制設定 target="_blank" 與 rel="noopener noreferrer"，這是最底層、絕對不會被阻擋的寫法
+    st.markdown('👉 **方式一：直接點選文字連結**')
+    st.markdown('<a href="' + LINE_COMMUNITY_URL + '" target="_blank" rel="noopener noreferrer" class="safe-link-text">🔗 點我加入【中崙資研新生提問群】</a>', unsafe_allow_html=True)
+    
+    st.write("")
+    st.markdown('👉 **方式二：如果上方點了沒反應，請直接複製下方網址至瀏覽器貼上：**')
+    st.code(LINE_COMMUNITY_URL, language="text")
 
 elif page == "成員介紹":
     st.title("🧑‍🤝‍🧑 成員介紹")
@@ -189,7 +201,6 @@ elif page == "成員介紹":
                 )
                 st.markdown(html_code, unsafe_allow_html=True)
                 
-                # 成員卡片改為標準下方按鈕，安全不衝突
                 st.write("")
                 if st.button("個人頁面 →", key="btn_" + str(member['id']), use_container_width=True):
                     st.session_state.selected_member = member
@@ -200,10 +211,12 @@ elif page == "聯絡我們":
 
     st.title("📬 聯絡社團幹部")
     
-    st.info("💡 溫馨提示：如果想要獲得最即時、最快速的回答，建議直接點擊下方按鈕加入我們的 LINE 新生群發問喔！")
+    st.info("💡 溫馨提示：如果想要獲得最即時、最快速的回答，可以優先透過 LINE 新生群發問喔！")
     
-    # 關鍵修正：聯絡我們頁面也同步改用官方原生 st.link_button，100% 正常彈出網頁！
-    st.link_button("🟢 點我秒入【新生 LINE 提問群】", LINE_COMMUNITY_URL, type="primary")
+    # ─── 終極修正點 2：聯絡我們頁面安全防線 ───
+    st.markdown('<a href="' + LINE_COMMUNITY_URL + '" target="_blank" rel="noopener noreferrer" class="safe-link-text">🔗 點我秒入【新生 LINE 提問群】</a>', unsafe_allow_html=True)
+    st.write("若點選上方連結沒反應，可複製此網址於網頁瀏覽器開啟：")
+    st.code(LINE_COMMUNITY_URL, language="text")
     st.markdown("---")
     
     st.write("若您不方便使用 LINE，也可以填寫以下電子提問單，我們會以 Email 回覆您：")
@@ -247,6 +260,6 @@ elif page == "聯絡我們":
                         if response.status_code == 200:
                             st.success("🎉 傳送成功！謝謝 " + name + " 的留言，學長姐會盡快回覆到您的信箱：" + email + "！")
                         else:
-                            st.error("😭 傳送失敗，請稍後再試，做直接聯絡幹部！")
+                            st.error("😭 傳送失敗，請稍後再試，或直接聯絡幹部！")
                     except Exception as e:
                         st.error("⚠️ 連線超時，請檢查您的網路狀態！")
