@@ -3,7 +3,7 @@ import streamlit as st
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
 
-# 2. 注入 CSS 樣式
+# 2. 注入 CSS 樣式 (精美綠色按鈕與幹部卡片同步保留)
 st.markdown("""
 <style>
 /* 1. 強制讓 columns 橫向排列不換行，並產生滾動條 */
@@ -101,7 +101,7 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
 
-/* 9. 將超連結 <a> 標籤完全偽裝成按鈕的外觀 */
+/* 9. 精美 LINE 社群連結按鈕外觀 */
 .line-anchor-btn {
     display: inline-flex !important;
     align-items: center !important;
@@ -113,7 +113,7 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
     padding: 14px 28px !important;
     border-radius: 30px !important;
     box-shadow: 0 4px 12px rgba(6, 199, 85, 0.3) !important;
-    text-decoration: none !important; /* 拔掉超連結底線 */
+    text-decoration: none !important;
     transition: all 0.2s !important;
     margin: 12px 0 !important;
 }
@@ -162,15 +162,16 @@ if page == "首頁介紹":
     st.markdown("---")
     st.markdown("### 💬 有問題想直接問學長姐？")
     
-    # 用 HTML 原生連結 <a> 代替按鈕，並加上 target="_parent" 強制在外層網頁（或當前分頁）開啟
-    # 這樣既有方法一的好看按鈕外觀，又擁有方法二的超高相容性！
+    # 渲染精美按鈕外觀
     html_link_1 = f'''
-    <a class="line-anchor-btn" href="{LINE_COMMUNITY_URL}" target="_parent">
+    <a class="line-anchor-btn" href="{LINE_COMMUNITY_URL}" target="_blank">
         🟢 點我加入【中崙資研新生提問群】
     </a>
     '''
     st.markdown(html_link_1, unsafe_allow_html=True)
-    st.write("點擊上方按鈕將跳轉至 LINE 社群，課程、社團疑惑一秒替你解答！")
+    
+    # 💡 關鍵實用提示：指引手機用戶如何通關
+    st.caption("💡 **手機版操作提示：** 若直接點選按鈕無反應，請**長按按鈕**並選擇 **「在新分頁開啟」** 或 **「在瀏覽器開啟」** 即可順利加入群組喔！")
 
 elif page == "成員介紹":
     st.title("🧑‍🤝‍🧑 成員介紹")
@@ -227,15 +228,16 @@ elif page == "聯絡我們":
 
     st.title("📬 聯絡社團幹部")
     
-    st.info("💡 溫馨提示：如果想要獲得最即時、最快速的回答，建議直接點擊下方按鈕加入我們的 LINE 新生群發問喔！")
+    st.info("💡 溫馨提示：如果想要獲得最即時、最快速的回答，建議直接加入我們的 LINE 新生群發問喔！")
     
-    # 聯絡我們頁面也同步修正為 <a> 標籤按鈕
+    # 聯絡我們頁面同步渲染精美按鈕與提示
     html_link_2 = f'''
-    <a class="line-anchor-btn" href="{LINE_COMMUNITY_URL}" target="_parent">
+    <a class="line-anchor-btn" href="{LINE_COMMUNITY_URL}" target="_blank">
         🟢 點我秒入【新生 LINE 提問群】
     </a>
     '''
     st.markdown(html_link_2, unsafe_allow_html=True)
+    st.caption("💡 **手機版操作提示：** 若直接點選按鈕無反應，請**長按按鈕**並選擇 **「在新分頁開啟」** 即可！")
     st.markdown("---")
     
     st.write("若您不方便使用 LINE，也可以填寫以下電子提問單，我們會以 Email 回覆您：")
