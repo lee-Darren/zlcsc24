@@ -3,7 +3,7 @@ import streamlit as st
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
 
-# 2. 注入極致置中與卡片全域點擊的 CSS 樣式
+# 2. 注入 CSS 樣式（已移除會擋到連結的高風險透明遮罩設定）
 st.markdown("""
 <style>
 /* 1. 強制讓 columns 橫向排列不換行，並產生滾動條 */
@@ -17,7 +17,7 @@ div[data-testid="stHorizontalBlock"] {
     align-items: stretch !important;
 }
 
-/* 2. 定義每一張卡片的寬度與外觀，並設為相對定位 */
+/* 2. 定義每一張卡片的寬度與外觀 */
 div[data-testid="stHorizontalBlock"] > div {
     min-width: 210px !important;
     max-width: 210px !important;
@@ -25,15 +25,13 @@ div[data-testid="stHorizontalBlock"] > div {
     background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 16px;
-    padding: 20px 15px 45px 15px !important; /* 增加底部 padding (45px)，為「個人頁面」文字留出空間 */
+    padding: 20px 15px 20px 15px !important; 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
     transition: transform 0.2s, box-shadow 0.2s;
     display: flex !important;
     flex-direction: column !important;
     align-items: center !important; 
     justify-content: flex-start !important;
-    position: relative !important; /* 作為絕對定位按鈕的基準 */
-    overflow: hidden !important; 
 }
 
 /* 3. 滑鼠懸停卡片時的陰影與上浮效果 */
@@ -49,7 +47,6 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     align-items: center !important;
     width: 100% !important;
     margin: 0 auto 10px auto !important;
-    pointer-events: none !important; /* 確保滑鼠事件穿透 */
 }
 
 /* 5. 圓形頭像樣式 */
@@ -60,7 +57,6 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     object-fit: cover !important;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
     display: block !important;
-    pointer-events: none !important;
 }
 
 /* 6. 職稱標籤樣式 */
@@ -69,7 +65,6 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     text-align: center;
     margin-top: 5px;
     margin-bottom: 5px;
-    pointer-events: none !important;
 }
 .role-badge {
     background-color: #eef5ff;
@@ -79,7 +74,6 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     padding: 4px 12px;
     border-radius: 20px;
     display: inline-block;
-    pointer-events: none !important;
 }
 
 /* 7. 名字樣式 */
@@ -89,57 +83,9 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     color: #334155;
     margin-top: 10px;
     text-align: center;
-    pointer-events: none !important;
 }
 
-/* 8. 【終極完美覆蓋】精準定位只包覆 stButton 的容器，將按鈕 100% 展開並覆蓋整張卡片 */
-div[data-testid="stHorizontalBlock"] div[data-testid="element-container"]:has(div.stButton) {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    z-index: 9999 !important; /* 超高層級，絕對覆蓋在照片、職稱、名字的最上方 */
-}
-
-div[data-testid="stHorizontalBlock"] div.stButton,
-div[data-testid="stHorizontalBlock"] div.stButton > button {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    width: 100% !important;
-    height: 100% !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background-color: transparent !important; /* 平時背景完全透明 */
-    border: none !important;
-    box-shadow: none !important;
-    cursor: pointer !important;
-    border-radius: 16px !important; /* 圓角貼合卡片外框 */
-    
-    /* 核心排版：利用 Flexbox 將按鈕文字推至卡片最底部 */
-    display: flex !important;
-    align-items: flex-end !important;
-    justify-content: center !important;
-    padding-bottom: 15px !important; /* 控制「個人頁面」字樣與底部的距離 */
-    
-    /* 文字樣式設定 */
-    color: #007bff !important; 
-    font-size: 14px !important;
-    font-weight: bold !important;
-    transition: background-color 0.2s, color 0.2s !important;
-}
-
-/* 當滑鼠移入卡片時，整張卡片微幅變暗，且文字顏色加深 */
-div[data-testid="stHorizontalBlock"] > div:hover button {
-    background-color: rgba(0, 123, 255, 0.03) !important; 
-    color: #0056b3 !important;
-    text-decoration: underline !important; /* 滑鼠懸停時加上底線，增加提示感 */
-}
-
-/* 9. 滾動條美化 */
+/* 8. 滾動條美化 */
 div[data-testid="stHorizontalBlock"]::-webkit-scrollbar {
     height: 8px;
 }
@@ -153,28 +99,6 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb {
 }
 div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
-}
-
-/* 10. LINE 社群專屬按鈕樣式 */
-.line-community-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background-color: #06C755;
-    color: white !important;
-    font-weight: bold;
-    font-size: 16px;
-    padding: 12px 24px;
-    border-radius: 30px;
-    text-decoration: none !important;
-    box-shadow: 0 4px 12px rgba(6, 199, 85, 0.3);
-    transition: all 0.2s;
-    margin: 10px 0;
-}
-.line-community-btn:hover {
-    background-color: #05B34C;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(6, 199, 85, 0.4);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -213,12 +137,12 @@ if page == "首頁介紹":
     * **社團活動**：交流茶會、聯合迎新、聖誕交換禮物、社內程式競賽與成發。
     """)
     
-    # 修正點：避免使用 f-string 導致大括號解析失敗，改用傳統字串拼接
     st.markdown("---")
     st.markdown("### 💬 有問題想直接問學長姐？")
-    link_html_1 = '<a href="' + LINE_COMMUNITY_URL + '" target="_blank" class="line-community-btn">💬 點我加入【中崙資研新生提問群】</a>'
-    st.markdown(link_html_1, unsafe_allow_html=True)
-    st.write("點擊上方按鈕加入 LINE 社群，課程、社團疑惑一秒替你解答！")
+    
+    # 關鍵修正：改用官方原生 st.link_button，保證防禦所有 CSS 遮擋，100% 可點擊！
+    st.link_button("🟢 點我加入【中崙資研新生提問群】(LINE 社群)", LINE_COMMUNITY_URL, type="primary")
+    st.write("點擊上方按鈕將會開啟新分頁，加入 LINE 社群，課程、社團疑惑一秒替你解答！")
 
 elif page == "成員介紹":
     st.title("🧑‍🤝‍🧑 成員介紹")
@@ -254,7 +178,6 @@ elif page == "成員介紹":
         
         for idx, member in enumerate(members):
             with cols[idx]:
-                # 修正點：卡片內容字串拼接，確保安全
                 html_code = (
                     '<div class="avatar-container">'
                     '    <img src="' + member["img"] + '" class="custom-circle-avatar" />'
@@ -266,7 +189,9 @@ elif page == "成員介紹":
                 )
                 st.markdown(html_code, unsafe_allow_html=True)
                 
-                if st.button("個人頁面 →", key="btn_" + member['id'], use_container_width=True):
+                # 成員卡片改為標準下方按鈕，安全不衝突
+                st.write("")
+                if st.button("個人頁面 →", key="btn_" + str(member['id']), use_container_width=True):
                     st.session_state.selected_member = member
                     st.rerun()
 
@@ -276,9 +201,9 @@ elif page == "聯絡我們":
     st.title("📬 聯絡社團幹部")
     
     st.info("💡 溫馨提示：如果想要獲得最即時、最快速的回答，建議直接點擊下方按鈕加入我們的 LINE 新生群發問喔！")
-    # 修正點：同樣改用字串拼接規避 f-string 衝突
-    link_html_2 = '<a href="' + LINE_COMMUNITY_URL + '" target="_blank" class="line-community-btn">💬 點我秒入【新生 LINE 提問群】</a>'
-    st.markdown(link_html_2, unsafe_allow_html=True)
+    
+    # 關鍵修正：聯絡我們頁面也同步改用官方原生 st.link_button，100% 正常彈出網頁！
+    st.link_button("🟢 點我秒入【新生 LINE 提問群】", LINE_COMMUNITY_URL, type="primary")
     st.markdown("---")
     
     st.write("若您不方便使用 LINE，也可以填寫以下電子提問單，我們會以 Email 回覆您：")
@@ -322,6 +247,6 @@ elif page == "聯絡我們":
                         if response.status_code == 200:
                             st.success("🎉 傳送成功！謝謝 " + name + " 的留言，學長姐會盡快回覆到您的信箱：" + email + "！")
                         else:
-                            st.error("😭 傳送失敗，請稍後再試，或直接聯絡幹部！")
+                            st.error("😭 傳送失敗，請稍後再試，做直接聯絡幹部！")
                     except Exception as e:
                         st.error("⚠️ 連線超時，請檢查您的網路狀態！")
