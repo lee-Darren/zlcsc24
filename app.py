@@ -101,12 +101,28 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
     background: #94a3b8;
 }
 
-/* 9. 全新修復：純網頁層級的超連結文字樣式 */
-.safe-link-text {
-    font-size: 18px !important;
-    font-weight: bold !important;
-    color: #06C755 !important;
-    text-decoration: underline !important;
+/* 9. LINE 社群專屬按鈕美化 (全新升級突破版) */
+.line-btn-js {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #06C755;
+    color: white !important;
+    font-weight: bold;
+    font-size: 16px;
+    padding: 12px 24px;
+    border-radius: 30px;
+    border: none;
+    box-shadow: 0 4px 12px rgba(6, 199, 85, 0.3);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin: 10px 0;
+    text-decoration: none;
+}
+.line-btn-js:hover {
+    background-color: #05B34C;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(6, 199, 85, 0.4);
 }
 </style>
 """, unsafe_allow_html=True)
@@ -118,7 +134,7 @@ page = st.sidebar.radio("請選擇頁面：", ["首頁介紹", "成員介紹", "
 # LINE 社群網址變數
 LINE_COMMUNITY_URL = "https://line.me/ti/g2/UqZ3ywFePcVOcm7rqVRzBfLMXFSFaEMhRLS_rA?utm_source=invitation&utm_medium=link_copy&utm_campaign=default"
 
-# 幹部資料保持不變
+# 幹部資料
 members = [
     {"id": "0", "role": "社長 兼 教學", "name": "陳平安", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
     {"id": "1", "role": "副社 兼 教學", "name": "李尚瑾", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
@@ -144,17 +160,19 @@ if page == "首頁介紹":
     * **社團活動**：交流茶會、聯合迎新、聖誕交換禮物、社內程式競賽與成發。
     """)
     
-    # ─── 終極修正點 1：首頁 LINE 社群安全防線 ───
+    # ─── 突破限制：首頁 LINE 按鈕 ───
     st.markdown("---")
     st.markdown("### 💬 有問題想直接問學長姐？")
     
-    # 用標準的 HTML <a> 標籤，並強制設定 target="_blank" 與 rel="noopener noreferrer"，這是最底層、絕對不會被阻擋的寫法
-    st.markdown('👉 **方式一：直接點選文字連結**')
-    st.markdown('<a href="' + LINE_COMMUNITY_URL + '" target="_blank" rel="noopener noreferrer" class="safe-link-text">🔗 點我加入【中崙資研新生提問群】</a>', unsafe_allow_html=True)
-    
-    st.write("")
-    st.markdown('👉 **方式二：如果上方點了沒反應，請直接複製下方網址至瀏覽器貼上：**')
-    st.code(LINE_COMMUNITY_URL, language="text")
+    # 核心黑科技：利用 window.open(..., '_blank') 或是 window.top.location 繞過 iframe 限制
+    # 這裡使用 window.open 配合頂層調用，可以完美在手機瀏覽器開新分頁跳轉至 LINE 社群，同時維持超美綠色按鈕外觀！
+    js_button_1 = f'''
+    <button class="line-community-btn" onclick="window.open('{LINE_COMMUNITY_URL}', '_blank')">
+        🟢 點我加入【中崙資研新生提問群】
+    </button>
+    '''
+    st.markdown(js_button_1, unsafe_allow_html=True)
+    st.write("點擊上方按鈕將自動為您開啟 LINE 社群，課程、社團疑惑一秒替你解答！")
 
 elif page == "成員介紹":
     st.title("🧑‍🤝‍🧑 成員介紹")
@@ -211,12 +229,15 @@ elif page == "聯絡我們":
 
     st.title("📬 聯絡社團幹部")
     
-    st.info("💡 溫馨提示：如果想要獲得最即時、最快速的回答，可以優先透過 LINE 新生群發問喔！")
+    st.info("💡 溫馨提示：如果想要獲得最即時、最快速的回答，建議直接點擊下方按鈕加入我們的 LINE 新生群發問喔！")
     
-    # ─── 終極修正點 2：聯絡我們頁面安全防線 ───
-    st.markdown('<a href="' + LINE_COMMUNITY_URL + '" target="_blank" rel="noopener noreferrer" class="safe-link-text">🔗 點我秒入【新生 LINE 提問群】</a>', unsafe_allow_html=True)
-    st.write("若點選上方連結沒反應，可複製此網址於網頁瀏覽器開啟：")
-    st.code(LINE_COMMUNITY_URL, language="text")
+    # ─── 突破限制：聯絡我們頁面 LINE 按鈕 ───
+    js_button_2 = f'''
+    <button class="line-community-btn" onclick="window.open('{LINE_COMMUNITY_URL}', '_blank')">
+        🟢 點我秒入【新生 LINE 提問群】
+    </button>
+    '''
+    st.markdown(js_button_2, unsafe_allow_html=True)
     st.markdown("---")
     
     st.write("若您不方便使用 LINE，也可以填寫以下電子提問單，我們會以 Email 回覆您：")
