@@ -168,7 +168,7 @@ members = [
         "id": "4", 
         "role": "活動 兼 總務", 
         "name": "曾開元", 
-        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zengkaiyuan", 
+        "img": "螢幕擷取畫面 2026-08-07 202010 - 20830曾開元.png", 
         "email": "s11430172@zlsh.tp.edu.tw", 
         "specialty": "大提琴、鋼琴", 
         "intro": "教數學英文 興趣是音樂 不會寫程式", 
