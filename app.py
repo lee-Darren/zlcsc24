@@ -135,15 +135,15 @@ LINE_COMMUNITY_URL = "https://line.me/ti/g2/UqZ3ywFePcVOcm7rqVRzBfLMXFSFaEMhRLS_
 
 # 幹部資料
 members = [
-    {"id": "0", "role": "社長 兼 教學", "name": "陳平安", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
-    {"id": "1", "role": "副社 兼 教學", "name": "李尚瑾", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
-    {"id": "2", "role": "公關", "name": "魏敘百", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=weisubai", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
-    {"id": "3", "role": "活動", "name": "張承緒", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zhangchengxu", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
-    {"id": "4", "role": "活動 兼 總務", "name": "曾開元", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zengkaiyuan", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
-    {"id": "5", "role": "美宣", "name": "倪宇廷", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=niyuting", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
-    {"id": "6", "role": "設備", "name": "陳庭弘", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chentinghong", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
-    {"id": "7", "role": "文書", "name": "黃于恩", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=huangyuen", "email": "************@email.com", "specialty": "**********", "intro": "*****************"},
-    {"id": "8", "role": "教學", "name": "蘇奕全", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=suyichuan", "email": "************@email.com", "specialty": "**********", "intro": "*****************"}
+    {"id": "0", "role": "社長 兼 教學", "name": "陳平安", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
+    {"id": "1", "role": "副社 兼 教學", "name": "李尚瑾", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin", "email": "s11430264@zlsh.tp.edu.tw", "specialty": "**********", "intro": "*****************", "ig": ""},
+    {"id": "2", "role": "公關", "name": "魏敘百", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=weisubai", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
+    {"id": "3", "role": "活動", "name": "張承緒", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zhangchengxu", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
+    {"id": "4", "role": "活動 兼 總務", "name": "曾開元", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zengkaiyuan", "email": "s11430172@zlsh.tp.edu.tw", "specialty": "**********", "intro": "*****************", "ig": "zlcsc24._.kaiyuan0401"},
+    {"id": "5", "role": "美宣", "name": "倪宇廷", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=niyuting", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
+    {"id": "6", "role": "設備", "name": "陳庭弘", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chentinghong", "email": "lemon69365625@gmail.com", "specialty": "**********", "intro": "*****************", "ig": "zlcsc24_starrynight"},
+    {"id": "7", "role": "文書", "name": "黃于恩", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=huangyuen", "email": "s11430275@zlsh.tp.edu.tw", "specialty": "**********", "intro": "*****************", "ig": "zlcsc24_penguin"},
+    {"id": "8", "role": "教學", "name": "蘇奕全", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=suyichuan", "email": "andysuyichuan@gmail.com", "specialty": "**********", "intro": "*****************", "ig": "zlscsc_chuan"}
 ]
 
 if page == "首頁介紹":
@@ -197,6 +197,7 @@ elif page == "成員介紹":
             st.markdown('<span class="role-badge" style="font-size: 15px;">' + member["role"] + '</span>', unsafe_allow_html=True)
             st.markdown("---")
             st.markdown("**📧 Email：** " + member['email'])
+            st.markdown("**＠ IG：** " + member['ig'])
             st.markdown("**🎯 專長：** " + member['specialty'])
             st.markdown("**📝 簡介：** " + member['intro'])
             
