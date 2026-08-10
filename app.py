@@ -131,18 +131,89 @@ members = [
         "name": "陳平安", 
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", 
         "email": "************@email.com", 
-        "specialty": "**********", 
+        "specialty": "python", 
         "intro": "平安的「平」，平安的「安」\nc++自學ing\n會教html\n鐵道迷\n(never gonna give you up 🎶 )", 
+        "ig": "zlcsc24_fean"
+    },
+    {
+        "id": "1", 
+        "role": "副社 兼 教學", 
+        "name": "李尚瑾", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin", 
+        "email": "s11430264@zlsh.tp.edu.tw", 
+        "specialty": "**********", 
+        "intro": "*****************", 
         "ig": ""
     },
-    {"id": "1", "role": "副社 兼 教學", "name": "李尚瑾", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin", "email": "s11430264@zlsh.tp.edu.tw", "specialty": "**********", "intro": "*****************", "ig": ""},
-    {"id": "2", "role": "公關", "name": "魏敘百", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=weisubai", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
-    {"id": "3", "role": "活動", "name": "張承緒", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zhangchengxu", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
-    {"id": "4", "role": "活動 兼 總務", "name": "曾開元", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zengkaiyuan", "email": "s11430172@zlsh.tp.edu.tw", "specialty": "**********", "intro": "*****************", "ig": "zlcsc24._.kaiyuan0401"},
-    {"id": "5", "role": "美宣", "name": "倪宇廷", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=niyuting", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
-    {"id": "6", "role": "設備", "name": "陳庭弘", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chentinghong", "email": "lemon69365625@gmail.com", "specialty": "**********", "intro": "*****************", "ig": "zlcsc24_starrynight"},
-    {"id": "7", "role": "文書", "name": "黃于恩", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=huangyuen", "email": "s11430275@zlsh.tp.edu.tw", "specialty": "**********", "intro": "*****************", "ig": "zlcsc24_penguin"},
-    {"id": "8", "role": "教學", "name": "蘇奕全", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=suyichuan", "email": "andysuyichuan@gmail.com", "specialty": "**********", "intro": "*****************", "ig": "zlscsc_chuan"}
+    {
+        "id": "2", 
+        "role": "公關", 
+        "name": "魏敘百", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=weisubai", 
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************", 
+        "ig": ""
+    },
+    {
+        "id": "3", 
+        "role": "活動", 
+        "name": "張承緒", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zhangchengxu", 
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************", 
+        "ig": ""
+    },
+    {
+        "id": "4", 
+        "role": "活動 兼 總務", 
+        "name": "曾開元", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zengkaiyuan", 
+        "email": "s11430172@zlsh.tp.edu.tw", 
+        "specialty": "大提琴、鋼琴", 
+        "intro": "教數學英文 興趣是音樂 不會寫程式", 
+        "ig": "zlcsc24._.kaiyuan0401"
+    },
+    {
+        "id": "5", 
+        "role": "美宣", 
+        "name": "倪宇廷", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=niyuting", 
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "*****************", 
+        "ig": ""
+    },
+    {
+        "id": "6", 
+        "role": "設備", 
+        "name": "陳庭弘", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chentinghong", 
+        "email": "lemon69365625@gmail.com", 
+        "specialty": "太多了", 
+        "intro": "我很懶 （真的 \n有馬加奈♥️  Wonhee♥️\nIAN🫪 Moka🫪", 
+        "ig": "zlcsc24_starrynight"
+    },
+    {
+        "id": "7", 
+        "role": "文書", 
+        "name": "黃于恩", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=huangyuen", 
+        "email": "s11430275@zlsh.tp.edu.tw", 
+        "specialty": "我會彈鋼琴、我愛打羽毛球、玩Pokémon go", 
+        "intro": "哈嘍～我是文書20832黃于恩，平常最喜歡玩Pokémon go，有問題都歡迎問我ㄛ～（副社長也太帥～這句不用加）", 
+        "ig": "zlcsc24_penguin"
+    },
+    {
+        "id": "8", 
+        "role": "教學", 
+        "name": "蘇奕全", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=suyichuan", 
+        "email": "andysuyichuan@gmail.com", 
+        "specialty": "c++, arduino在學", 
+        "intro": "嗨我是教學長蘇奕全,不要看我是教學長實際上費柴一個,我也會打一些槍戰只不過都很菜\n)歡迎學弟妹加資研喔.", 
+        "ig": "zlscsc_chuan"
+    }
 ]
 
 if page == "首頁介紹":
