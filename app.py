@@ -135,11 +135,7 @@ LINE_COMMUNITY_URL = "https://line.me/ti/g2/UqZ3ywFePcVOcm7rqVRzBfLMXFSFaEMhRLS_
 
 # 幹部資料
 members = [
-    {"id": "0", "role": "社長 兼 教學", "name": "陳平安", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", "email": "************@email.com", "specialty": "**********", "intro": "平安的「平」，平安的「安」
-c++自學ing
-會教html
-鐵道迷
-(never gonna give you up 🎶 )", "ig": ""},
+    {"id": "0", "role": "社長 兼 教學", "name": "陳平安", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", "email": "************@email.com", "specialty": "**********", "intro": "平安的「平」，平安的「安」", "ig": ""},
     {"id": "1", "role": "副社 兼 教學", "name": "李尚瑾", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin", "email": "s11430264@zlsh.tp.edu.tw", "specialty": "**********", "intro": "*****************", "ig": ""},
     {"id": "2", "role": "公關", "name": "魏敘百", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=weisubai", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
     {"id": "3", "role": "活動", "name": "張承緒", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zhangchengxu", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
