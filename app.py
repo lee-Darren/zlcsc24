@@ -198,7 +198,7 @@ members = [
         "id": "7", 
         "role": "文書", 
         "name": "黃于恩", 
-        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=huangyuen", 
+        "img": "IMG_3495 - 20832黃于恩.jpeg", 
         "email": "s11430275@zlsh.tp.edu.tw", 
         "specialty": "我會彈鋼琴、我愛打羽毛球、玩Pokémon go", 
         "intro": "哈嘍～我是文書20832黃于恩，平常最喜歡玩Pokémon go，有問題都歡迎問我ㄛ～（副社長也太帥～這句不用加）", 
