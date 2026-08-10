@@ -3,17 +3,16 @@ import streamlit as st
 # 1. 網頁頂端標題與圖示設定
 st.set_page_config(page_title="資訊研究社社團官網", page_icon="💻", layout="wide")
 
-# 2. 注入 CSS 樣式 (精美綠色按鈕與幹部卡片同步保留)
+# 2. 注入 CSS 樣式 (已啟用幹部卡片與內文自動換行)
 st.markdown("""
 <style>
-/* 1. 強制讓 columns 橫向排列不換行，並產生滾動條 */
+/* 1. 幹部卡片區域：改為 wrap 允許自動換行，並設為居中對齊 */
 div[data-testid="stHorizontalBlock"] {
     display: flex !important;
-    flex-wrap: nowrap !important;
-    overflow-x: auto !important;
+    flex-wrap: wrap !important; /* 啟用自動換行 */
+    justify-content: center !important; /* 卡片置中 */
     padding: 15px 5px !important;
-    gap: 15px !important;
-    scroll-behavior: smooth;
+    gap: 20px !important;
     align-items: stretch !important;
 }
 
@@ -85,23 +84,7 @@ div[data-testid="stHorizontalBlock"] > div:hover {
     text-align: center;
 }
 
-/* 8. 滾動條美化 */
-div[data-testid="stHorizontalBlock"]::-webkit-scrollbar {
-    height: 8px;
-}
-div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-track {
-    background: #f1f5f9;
-    border-radius: 10px;
-}
-div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb {
-    background: #cbd5e1;
-    border-radius: 10px;
-}
-div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
-    background: #94a3b8;
-}
-
-/* 9. 精美 LINE 社群連結按鈕外觀 */
+/* 8. 精美 LINE 社群連結按鈕外觀 */
 .line-anchor-btn {
     display: inline-flex !important;
     align-items: center !important;
@@ -123,6 +106,13 @@ div[data-testid="stHorizontalBlock"]::-webkit-scrollbar-thumb:hover {
     box-shadow: 0 6px 16px rgba(6, 199, 85, 0.4) !important;
     color: white !important;
 }
+
+/* 9. 強制文字與長字串/網址自動換行 */
+div[data-testid="stMarkdownContainer"] {
+    word-break: break-word !important;
+    overflow-wrap: break-word !important;
+    white-space: pre-line !important; /* 保留換行格式，兼顧自動換行 */
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -133,9 +123,18 @@ page = st.sidebar.radio("請選擇頁面：", ["首頁介紹", "成員介紹", "
 # LINE 社群網址變數
 LINE_COMMUNITY_URL = "https://line.me/ti/g2/UqZ3ywFePcVOcm7rqVRzBfLMXFSFaEMhRLS_rA?utm_source=invitation&utm_medium=link_copy&utm_campaign=default"
 
-# 幹部資料
+# 幹部資料 (已更新社長自介)
 members = [
-    {"id": "0", "role": "社長 兼 教學", "name": "陳平安", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", "email": "************@email.com", "specialty": "**********", "intro": "平安的「平」，平安的「安」", "ig": ""},
+    {
+        "id": "0", 
+        "role": "社長 兼 教學", 
+        "name": "陳平安", 
+        "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan", 
+        "email": "************@email.com", 
+        "specialty": "**********", 
+        "intro": "平安的「平」，平安的「安」\nc++自學ing\n會教html\n鐵道迷\n(never gonna give you up 🎶 )", 
+        "ig": ""
+    },
     {"id": "1", "role": "副社 兼 教學", "name": "李尚瑾", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin", "email": "s11430264@zlsh.tp.edu.tw", "specialty": "**********", "intro": "*****************", "ig": ""},
     {"id": "2", "role": "公關", "name": "魏敘百", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=weisubai", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
     {"id": "3", "role": "活動", "name": "張承緒", "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zhangchengxu", "email": "************@email.com", "specialty": "**********", "intro": "*****************", "ig": ""},
@@ -162,15 +161,12 @@ if page == "首頁介紹":
     st.markdown("---")
     st.markdown("### 💬 有問題想直接問學長姐？")
     
-    # 渲染精美按鈕外觀
     html_link_1 = f'''
     <a class="line-anchor-btn" href="{LINE_COMMUNITY_URL}" target="_blank">
         🟢 點我加入【中崙資研新生提問群】
     </a>
     '''
     st.markdown(html_link_1, unsafe_allow_html=True)
-    
-    # 💡 關鍵實用提示：指引手機用戶如何通關
     st.caption("💡 **手機版操作提示：** 若直接點選按鈕無反應，請**長按按鈕**並選擇 **「在新分頁開啟」** 或 **「在瀏覽器開啟」** 即可順利加入群組喔！")
 
 elif page == "成員介紹":
@@ -199,7 +195,7 @@ elif page == "成員介紹":
             st.markdown("**📧 Email：** " + member['email'])
             st.markdown("**＠ IG：** " + member['ig'])
             st.markdown("**🎯 專長：** " + member['specialty'])
-            st.markdown("**📝 簡介：** " + member['intro'])
+            st.markdown("**📝 簡介：**\n" + member['intro'])
             
     else:
         st.write("💡 點擊幹部介紹下方按鈕即可查看個人詳細資訊！")
@@ -231,7 +227,6 @@ elif page == "聯絡我們":
     
     st.info("💡 溫馨提示：如果想要獲得最即時、最快速的回答，建議直接加入我們的 LINE 新生群發問喔！")
     
-    # 聯絡我們頁面同步渲染精美按鈕與提示
     html_link_2 = f'''
     <a class="line-anchor-btn" href="{LINE_COMMUNITY_URL}" target="_blank">
         🟢 點我秒入【新生 LINE 提問群】
