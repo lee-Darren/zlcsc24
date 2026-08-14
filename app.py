@@ -156,8 +156,7 @@ members = [
         "email": "隱私內容",
         "specialty": "python",
         "intro": (
-            "平安的「平」，平安的「安」\nc++自學ing\n會教html\n鐵道迷\n(never"
-            " gonna give you up 🎶 )"
+            "平安的「平」，平安的「安」\nc++自學ing、會教html、鐵道迷\n(never gonna give you up 🎶 )"
         ),
         "ig": "zlcsc24_fean",
     },
