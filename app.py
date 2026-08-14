@@ -306,9 +306,9 @@ elif page == "成員介紹":
           unsafe_allow_html=True,
       )
       st.markdown("---")
-      st.markdown("**📧 Email：** " + member["email"])
-      st.markdown("**＠ IG：** " + member["ig"])
-      st.markdown("**🎯 專長：** " + member["specialty"])
+      st.markdown("**📧 Email：**\n" + member["email"])
+      st.markdown("**＠ IG：**\n" + member["ig"])
+      st.markdown("**🎯 專長：**\n " + member["specialty"])
       st.markdown("**📝 簡介：**\n" + member["intro"])
 
   else:
