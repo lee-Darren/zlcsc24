@@ -153,7 +153,7 @@ members = [
         "img": (
             "https://api.dicebear.com/7.x/adventurer/svg?seed=chenpingan"
         ),
-        "email": "************@email.com",
+        "email": "隱私內容",
         "specialty": "python",
         "intro": (
             "平安的「平」，平安的「安」\nc++自學ing\n會教html\n鐵道迷\n(never"
@@ -176,20 +176,20 @@ members = [
         "role": "公關",
         "name": "魏敘百",
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=weisubai",
-        "email": "************@email.com",
-        "specialty": "**********",
-        "intro": "*****************",
-        "ig": "",
+        "email": "justinwei0414@gmail.com",
+        "specialty": "籃球",
+        "intro": "大家好，我是社團的公關。我的個性比較開朗，也很好相處，平常喜歡打籃球和玩手遊。希望接下來能和大家多多交流，也希望學弟妹有任何問題都可以來找我，一起讓社團變得更好玩！",
+        "ig": "@zlcsc24_weixubai ",
     },
     {
         "id": "3",
         "role": "活動",
         "name": "張承緒",
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=zhangchengxu",
-        "email": "************@email.com",
-        "specialty": "**********",
-        "intro": "*****************",
-        "ig": "",
+        "email": "隱私內容",
+        "specialty": "隱私內容",
+        "intro": "是一個一年級成績有點炸的人",
+        "ig": "隱私內容",
     },
     {
         "id": "4",
