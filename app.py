@@ -166,9 +166,9 @@ members = [
         "name": "李尚瑾",
         "img": "https://api.dicebear.com/7.x/adventurer/svg?seed=leeshangjin",
         "email": "s11430264@zlsh.tp.edu.tw",
-        "specialty": "**********",
-        "intro": "*****************",
-        "ig": "",
+        "specialty": "Python, C++學習中(作業)",
+        "intro": "你們好，我是副社兼教學，未來開學，各位的Python會由我負責，有什麼問題都可以問我喔!歡迎加入資研",
+        "ig": "zlcsc24_lee",
     },
     {
         "id": "2",
